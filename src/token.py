@@ -9,7 +9,7 @@ class Type(Enum):
 
 
 class Token:
-    def __init__(self, token_type = Type.IDENTIFIER, value = 0):
+    def __init__(self, token_type = Type.IDENTIFIER, value = ""):
         self.token_type = token_type
         self.value = value
 
