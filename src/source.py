@@ -1,4 +1,6 @@
 # source.py
+# zalozenie: przy inicjacji Source znak ustawiany jest na pierwsze miejsce
+
 
 import os
 
@@ -8,7 +10,7 @@ class Source:
         self.line_number = 1
         self.position = 0
         self.file = open(filename, "r")
-        self.character = ''
+        self.character = self.get_next_char()
         print("Open")
 
 
@@ -38,12 +40,9 @@ class Source:
             self.position += 1
         return self.character
 
-    def undo_get_next_char(self):
-        self.counter = self.counter - 1
-        self.file.seek(self.counter, 0)
-
 # source = Source("../test/test.txt")
-# print(source.get_next_char())
-# print(source.get_next_char())
-# print(source.get_next_char())
-# print(source.get_next_char())
+# print(f"{source.get_char()}, {source.get_line_number()}, {source.get_position()}")
+# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
+# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
+# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
+# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
