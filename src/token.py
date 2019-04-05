@@ -1,17 +1,19 @@
 # token.py
-from enum import Enum
+from enum import Enum, auto
 
 class Type(Enum):
-    IDENTIFIER = 1
-    LIST = 2
-    NUMBER = 3
-    BOOL = 4
+    EOF = auto()
+    IDENTIFIER = auto()
+    LIST = auto()
+    NUMBER = auto()
+    BOOL = auto()
 
 
 class Token:
     def __init__(self, token_type = Type.IDENTIFIER, value = ""):
         self.token_type = token_type
         self.value = value
+
 
     def __repr__(self):
         return f"(token_type={self.token_type}, value={self.value})"
