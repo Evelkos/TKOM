@@ -11,8 +11,9 @@ class Lexer:
 
     def build_next_token(self):
         self.ignore_white_spaces()
-        if not self.try_identifier():
-            self.try_digit()
+        if not self.try_eof():
+            if not self.try_identifier():
+                self.try_digit()
 
 
     def get_token(self):
@@ -20,7 +21,7 @@ class Lexer:
 
 
     def ignore_white_spaces(self):
-        while self.source.get_char() == " ":
+        while self.source.get_char() == " " or self.source.get_char() == "\n":
             self.source.get_next_char()
 
 
@@ -40,17 +41,17 @@ class Lexer:
         buff = ""
 
         if character.isdigit():
-            while character.isdigit() or character.isdigit():
+            while character.isdigit():
                 buff += character
                 character = self.source.get_next_char()
         return buff
 
 
-    def try_identifier(self):
-        token_value = self.read_identifier()
-        # tu dorobic sprawdzenie, czy slowo nie jest slowem kluczowym
-        if token_value != "":
-            self.token = Token(Type.IDENTIFIER, token_value)
+    def try_eof(self):
+        character = self.source.get_char()
+
+        if character is "":
+            self.token = Token(Type.EOF, None)
             return True
         return False
 
@@ -63,12 +64,16 @@ class Lexer:
         return False
 
 
-# lexer = Lexer("../test/test.txt")
-# lexer.build_next_token()
-# print(lexer.get_token())
-# lexer.build_next_token()
-# print(lexer.get_token())
-# lexer.build_next_token()
-# print(lexer.get_token())
-# lexer.build_next_token()
-# print(lexer.get_token())
+    def try_identifier(self):
+        token_value = self.read_identifier()
+        # tu dorobic sprawdzenie, czy slowo nie jest slowem kluczowym
+        if token_value != "":
+            self.token = Token(Type.IDENTIFIER, token_value)
+            return True
+        return False
+
+
+lexer = Lexer("../test/test.txt")
+while lexer.get_token().get_type() != Type.EOF:
+    lexer.build_next_token()
+    print(lexer.get_token())
