@@ -33,6 +33,9 @@ class Source:
 
     def get_next_char(self):
         self.character = self.file.read(1)
+        if self.character == '#':
+            while self.character != '\n' and self.character != '':
+                self.character = self.file.read(1)
         if self.character == '\n':
             self.line_number += 1
             self.position = 0
