@@ -1,7 +1,7 @@
 # lexer.py
 
 from source import Source
-from token import Token, Type
+from token import Token, Type, Symbol
 
 class Lexer:
     def __init__(self, filename = "../test/test.txt"):
@@ -11,9 +11,16 @@ class Lexer:
 
     def build_next_token(self):
         self.ignore_white_spaces()
-        if not self.try_eof():
-            if not self.try_identifier():
-                self.try_digit()
+        if self.try_eof():
+            return
+        elif self.try_identifier():
+            return
+        elif self.try_digit():
+            return
+        elif self.try_single_characters():
+            return
+        else:
+            return
 
 
     def get_token(self):
@@ -28,7 +35,6 @@ class Lexer:
     def read_identifier(self):
         character = self.source.get_char()
         buff = ""
-
         if character.isalpha():
             while character.isalpha() or character.isdigit():
                 buff += character
@@ -39,7 +45,6 @@ class Lexer:
     def read_number(self):
         character = self.source.get_char()
         buff = ""
-
         if character.isdigit():
             while character.isdigit():
                 buff += character
@@ -49,7 +54,6 @@ class Lexer:
 
     def try_eof(self):
         character = self.source.get_char()
-
         if character is "":
             self.token = Token(Type.EOF, None)
             return True
@@ -65,12 +69,29 @@ class Lexer:
 
 
     def try_identifier(self):
-        token_value = self.read_identifier()
-        # tu dorobic sprawdzenie, czy slowo nie jest slowem kluczowym
-        if token_value != "":
-            self.token = Token(Type.IDENTIFIER, token_value)
+        word = self.read_identifier()
+        try:
+            token_type = Symbol.key_words[word]
+            self.token = Token(token_type, word)
+            self.source.get_next_char()
             return True
-        return False
+        except:
+            if word != "":
+                self.token = Token(Type.IDENTIFIER, word)
+                self.source.get_next_char()
+                return True
+            return False
+
+
+    def try_single_characters(self):
+        character = self.source.get_char()
+        try:
+            token_type = Symbol.special_characters[character]
+            self.token = Token(token_type, character)
+            self.source.get_next_char()
+            return True
+        except:
+            return False
 
 
 lexer = Lexer("../test/test.txt")
