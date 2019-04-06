@@ -17,7 +17,9 @@ class Lexer:
             return
         elif self.try_digit():
             return
-        elif self.try_single_characters():
+        elif self.try_double_operator():
+            return
+        elif self.try_single_character():
             return
         else:
             return
@@ -45,7 +47,12 @@ class Lexer:
     def read_number(self):
         character = self.source.get_char()
         buff = ""
-        if character.isdigit():
+
+        if character == '0':
+            buff += character
+            character = self.source.get_next_char()
+
+        elif character.isdigit() and character != '0':
             while character.isdigit():
                 buff += character
                 character = self.source.get_next_char()
@@ -67,6 +74,26 @@ class Lexer:
             return True
         return False
 
+    def try_double_operator(self):
+        character = self.source.get_char()
+        if character == ">" or character == "<" or character == "=" or character == "!":
+            buff = character
+            character = self.source.get_next_char()
+            try:
+                token_type = Symbol.double_operators[buff + character]
+                self.token = Token(token_type, buff + character)
+                self.source.get_next_char()
+                return True
+            except: # znaki '<', '>', '=', '!' SA w special_characters
+                try:
+                    token_type = Symbol.special_characters[buff]
+                    self.token = Token(token_type, buff)
+                    return True
+                except:
+                    return False
+        return False
+
+
 
     def try_identifier(self):
         word = self.read_identifier()
@@ -83,7 +110,7 @@ class Lexer:
             return False
 
 
-    def try_single_characters(self):
+    def try_single_character(self):
         character = self.source.get_char()
         try:
             token_type = Symbol.special_characters[character]

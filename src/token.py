@@ -7,8 +7,10 @@ class Type(Enum):
     LIST = auto()
     NUMBER = auto()
     BOOL = auto()
-    ADD_OPERATOR = auto()
-    MULT_OPERATOR = auto()
+    PLUS = auto()
+    MINUS = auto()
+    STAR = auto()
+    DIVIDE = auto()
     OP_SQUARE_BRACKET = auto()
     CL_SQUARE_BRACKET = auto()
     OP_BRACKET = auto()
@@ -18,7 +20,22 @@ class Type(Enum):
     SEMICOLON = auto()
     DOT = auto()
     COMMA = auto()
+    NOT = auto()
     RETURN = auto()
+    LESS_THAN = auto()
+    GREATER_THAN = auto()
+    LESS_OR_EQUAL_TO = auto()
+    GREATER_OR_EQUAL_TO = auto()
+    EQUAL = auto()
+    EQUAL_TO = auto()
+    NOT_EQUAL_TO = auto()
+    AND = auto()
+    OR = auto()
+    FILTER = auto()
+    EACH = auto()
+    GET = auto()
+    LENGTH = auto()
+    DELETE = auto()
 
 class Symbol:
     special_characters = {
@@ -28,20 +45,38 @@ class Symbol:
         ')': Type.CL_BRACKET,
         '{': Type.OP_CURLY_BRACKET,
         '}': Type.CL_CURLY_BRACKET,
-        '*': Type.MULT_OPERATOR,
-        '/': Type.MULT_OPERATOR,
-        '+': Type.ADD_OPERATOR,
-        '-': Type.ADD_OPERATOR,
+        '*': Type.STAR,
+        '/': Type.DIVIDE,
+        '+': Type.PLUS,
+        '-': Type.MINUS,
         ';': Type.SEMICOLON,
         '.': Type.DOT,
-        ',': Type.COMMA
+        ',': Type.COMMA,
+        '!': Type.NOT,
+        '<': Type.LESS_THAN,
+        '>': Type.GREATER_THAN,
+        '=': Type.EQUAL,
+        '&': Type.AND,
+        '|': Type.OR
+    }
+
+    double_operators = {
+        '<=': Type.LESS_OR_EQUAL_TO,
+        '>=': Type.GREATER_OR_EQUAL_TO,
+        '==': Type.EQUAL_TO,
+        '!=': Type.NOT_EQUAL_TO
     }
 
     key_words = {
         'list': Type.LIST,
         'number': Type.NUMBER,
         'bool': Type.BOOL,
-        'return': Type.RETURN
+        'return': Type.RETURN,
+        'filter': Type.FILTER,
+        'each': Type.EACH,
+        'get': Type.GET,
+        'length': Type.LENGTH,
+        'delete': Type.DELETE
     }
 
 
