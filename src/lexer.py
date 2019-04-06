@@ -1,10 +1,10 @@
 # lexer.py
 
-from source import Source
-from token import Token, Type, Symbol
+from TKOM.src.source import Source
+from TKOM.src.token import Token, Type, Symbol
 
 class Lexer:
-    def __init__(self, filename = "../test/test.txt"):
+    def __init__(self, filename):
         self.source = Source(filename)
         self.token = Token()
 
@@ -120,8 +120,3 @@ class Lexer:
         except:
             return False
 
-
-lexer = Lexer("../test/test.txt")
-while lexer.get_token().get_type() != Type.EOF:
-    lexer.build_next_token()
-    print(lexer.get_token())
