@@ -26,7 +26,7 @@ class Type(Enum):
     GREATER_THAN = auto()
     LESS_OR_EQUAL_TO = auto()
     GREATER_OR_EQUAL_TO = auto()
-    EQUAL = auto()
+    ASSIGN = auto()
     EQUAL_TO = auto()
     NOT_EQUAL_TO = auto()
     AND = auto()
@@ -55,7 +55,7 @@ class Symbol:
         '!': Type.NOT,
         '<': Type.LESS_THAN,
         '>': Type.GREATER_THAN,
-        '=': Type.EQUAL,
+        '=': Type.ASSIGN,
         '&': Type.AND,
         '|': Type.OR
     }

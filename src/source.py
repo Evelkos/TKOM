@@ -8,12 +8,10 @@ class Source:
         self.position = 0
         self.file = open(filename, "r")
         self.character = self.get_next_char()
-        print("Open")
 
 
     def __del__(self):
         self.file.close()
-        print("Closed")
 
 
     def get_char(self):
