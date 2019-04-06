@@ -1,7 +1,10 @@
 # lexer.py
-
-from TKOM.src.source import Source
-from TKOM.src.token import Token, Type, Symbol
+if __name__ == "__main__":
+    from source import Source
+    from token import Token, Type, Symbol
+else:
+    from TKOM.src.source import Source
+    from TKOM.src.token import Token, Type, Symbol
 
 class Lexer:
     def __init__(self, filename):
@@ -105,7 +108,6 @@ class Lexer:
         except:
             if word != "":
                 self.token = Token(Type.IDENTIFIER, word)
-                self.source.get_next_char()
                 return True
             return False
 
@@ -119,4 +121,3 @@ class Lexer:
             return True
         except:
             return False
-
