@@ -1,9 +1,6 @@
 # source.py
-# zalozenie: przy inicjacji Source znak ustawiany jest na pierwsze miejsce
-
-
-import os
-
+# zalozenie: przy inicjacji Source znak ustawiany jest na pierwszy
+# znak w strumieniu danych
 
 class Source:
     def __init__(self, filename):
@@ -42,10 +39,3 @@ class Source:
         else:
             self.position += 1
         return self.character
-
-# source = Source("../test/test.txt")
-# print(f"{source.get_char()}, {source.get_line_number()}, {source.get_position()}")
-# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
-# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
-# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
-# print(f"{source.get_next_char()}, {source.get_line_number()}, {source.get_position()}")
