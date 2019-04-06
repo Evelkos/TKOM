@@ -4,9 +4,10 @@ from enum import Enum, auto
 class Type(Enum):
     EOF = auto()
     IDENTIFIER = auto()
-    LIST = auto()
+    LIST_TYPE = auto()
     NUMBER = auto()
-    BOOL = auto()
+    NUMBER_TYPE = auto()
+    BOOL_TYPE = auto()
     PLUS = auto()
     MINUS = auto()
     STAR = auto()
@@ -68,9 +69,9 @@ class Symbol:
     }
 
     key_words = {
-        'list': Type.LIST,
-        'number': Type.NUMBER,
-        'bool': Type.BOOL,
+        'list': Type.LIST_TYPE,
+        'number': Type.NUMBER_TYPE,
+        'bool': Type.BOOL_TYPE,
         'return': Type.RETURN,
         'filter': Type.FILTER,
         'each': Type.EACH,
