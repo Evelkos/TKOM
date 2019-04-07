@@ -25,6 +25,8 @@ class Lexer:
         elif self.try_single_character():
             return
         else:
+            self.token = Token(Type.UNIDENTIFIED, self.source.get_char())
+            self.source.get_next_char()
             return
 
 

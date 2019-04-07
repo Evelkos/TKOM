@@ -37,6 +37,7 @@ class Type(Enum):
     GET = auto()
     LENGTH = auto()
     DELETE = auto()
+    UNIDENTIFIED = auto()
 
 class Symbol:
     special_characters = {
