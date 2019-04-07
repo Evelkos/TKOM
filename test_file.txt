@@ -1,0 +1,2 @@
+identifier 123 list! nazwa997 () {} # abc
+asidoasdans #
