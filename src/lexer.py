@@ -3,8 +3,8 @@ if __name__ == "__main__":
     from source import Source
     from token import Token, Type, Symbol
 else:
-    from TKOM.src.source import Source
-    from TKOM.src.token import Token, Type, Symbol
+    from .source import Source
+    from .token import Token, Type, Symbol
 
 class Lexer:
     def __init__(self, filename):
