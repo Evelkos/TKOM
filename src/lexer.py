@@ -103,7 +103,6 @@ class Lexer:
         try:
             token_type = Symbol.key_words[word]
             self.token = Token(token_type, word)
-            self.source.get_next_char()
             return True
         except:
             if word != "":

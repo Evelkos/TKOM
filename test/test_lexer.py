@@ -245,7 +245,7 @@ def test_lexer_with_empty_file(tmp_path):
 
 def test_lexer_with_complex_file(tmp_path):
     file = tmp_path / "test_lexer_with_complex_file.txt"
-    file.write_text("abc =123| list }  abc!")
+    file.write_text("abc =123| list& }  abc!")
 
     lexer = Lexer(tmp_path / "test_lexer_with_complex_file.txt")
 
@@ -264,6 +264,9 @@ def test_lexer_with_complex_file(tmp_path):
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "list"
     assert lexer.get_token().get_type() == Type.LIST_TYPE
+    lexer.build_next_token()
+    assert lexer.get_token().get_value() == "&"
+    assert lexer.get_token().get_type() == Type.AND
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "}"
     assert lexer.get_token().get_type() == Type.CL_CURLY_BRACKET
