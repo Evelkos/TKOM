@@ -8,10 +8,6 @@ else:
 
 
 class Lexer:
-    # def __init__(self, filename):
-    #     self.source = Source(filename)
-    #     self.token = Token()
-
     def __init__(self, source):
         self.source = source
         self.token = Token()
@@ -89,41 +85,35 @@ class Lexer:
         if character == ">" or character == "<" or character == "=" or character == "!":
             buff = character
             character = self.source.get_next_char()
-            try:
+            if (buff + character) in Symbol.double_operators:
                 token_type = Symbol.double_operators[buff + character]
                 self.token = Token(token_type, buff + character)
                 self.source.get_next_char()
                 return True
-            except: # znaki '<', '>', '=', '!' SA w special_characters
-                try:
-                    token_type = Symbol.special_characters[buff]
-                    self.token = Token(token_type, buff)
-                    return True
-                except:
-                    return False
+            elif buff in Symbol.special_characters:
+                token_type = Symbol.special_characters[buff]
+                self.token = Token(token_type, buff)
+                return True
         return False
-
 
 
     def try_identifier(self):
         word = self.read_identifier()
-        try:
+        if word in Symbol.key_words:
             token_type = Symbol.key_words[word]
             self.token = Token(token_type, word)
             return True
-        except:
-            if word != "":
-                self.token = Token(Type.IDENTIFIER, word)
-                return True
-            return False
+        elif word != "":
+            self.token = Token(Type.IDENTIFIER, word)
+            return True
+        return False
 
 
     def try_single_character(self):
         character = self.source.get_char()
-        try:
+        if character in Symbol.special_characters:
             token_type = Symbol.special_characters[character]
             self.token = Token(token_type, character)
             self.source.get_next_char()
             return True
-        except:
-            return False
+        return False
