@@ -6,9 +6,14 @@ else:
     from .source import Source
     from .token import Token, Type, Symbol
 
+
 class Lexer:
-    def __init__(self, filename):
-        self.source = Source(filename)
+    # def __init__(self, filename):
+    #     self.source = Source(filename)
+    #     self.token = Token()
+
+    def __init__(self, source):
+        self.source = source
         self.token = Token()
 
 

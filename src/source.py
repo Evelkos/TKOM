@@ -1,17 +1,14 @@
 # source.py
 # zalozenie: przy inicjacji Source znak ustawiany jest na pierwszy
 # znak w strumieniu danych
+import sys
+
 
 class Source:
-    def __init__(self, filename):
+    def __init__(self):
         self.line_number = 1
         self.position = 0
-        self.file = open(filename, "r")
         self.character = self.get_next_char()
-
-
-    def __del__(self):
-        self.file.close()
 
 
     def get_char(self):
@@ -27,10 +24,10 @@ class Source:
 
 
     def get_next_char(self):
-        self.character = self.file.read(1)
+        self.character = sys.stdin.read(1)
         if self.character == '#':
             while self.character != '\n' and self.character != '':
-                self.character = self.file.read(1)
+                self.character = sys.stdin.read(1)
         if self.character == '\n':
             self.line_number += 1
             self.position = 0
