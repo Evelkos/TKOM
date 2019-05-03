@@ -1,5 +1,9 @@
 # lexer.py
+
 if __name__ == "__main__":
+    from source import Source
+    from token import Token, Type, Symbol
+elif __name__ == "lexer":
     from source import Source
     from token import Token, Type, Symbol
 else:

@@ -1,2 +1,12 @@
-identifier 123 list! nazwa997 () {} # abc
-asidoasdans #
+#identifier 123 list! nazwa997 () {} # abc
+#asidoasdans %abc#
+#abc
+#yyy
+
+function nazwa(bool prawda, bool falsz) {
+    
+}
+
+function nazwaa(bool prawda, bool falsz) {
+    
+}

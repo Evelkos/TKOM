@@ -38,6 +38,8 @@ class Type(Enum):
     LENGTH = auto()
     DELETE = auto()
     UNIDENTIFIED = auto()
+    MAIN = auto()
+    FUNCTION = auto()
 
 class Symbol:
     special_characters = {
@@ -78,9 +80,10 @@ class Symbol:
         'each': Type.EACH,
         'get': Type.GET,
         'length': Type.LENGTH,
-        'delete': Type.DELETE
+        'delete': Type.DELETE,
+        'main': Type.MAIN,
+        'function' : Type.FUNCTION,
     }
-
 
 class Token:
     def __init__(self, token_type = Type.IDENTIFIER, value = ""):
