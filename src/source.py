@@ -15,12 +15,8 @@ class Source:
         return self.character
 
 
-    def get_line_number(self):
-        return self.line_number
-
-
     def get_position(self):
-        return self.position
+        return self.line_number, self.position
 
 
     def get_next_char(self):
