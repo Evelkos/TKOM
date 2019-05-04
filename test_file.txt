@@ -4,10 +4,11 @@
 #yyy
 
 function nazwa(bool prawda, bool falsz) {
-return [abc, 123, [345, xyz]]
+    return [abc, 123, [345, xyz]]
 }
 
 function nazwaa(bool prawda, bool falsz) {
-print abc;
-return 123
+    bool a = true;
+    print abc;
+    return 123
 }

@@ -1,4 +1,4 @@
-# bool.py
+# list.py
 
 if __name__ == "__main__":
     from node import Node
