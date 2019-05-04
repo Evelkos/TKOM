@@ -201,6 +201,16 @@ def test_lexer_with_key_word_function():
     assert lexer.get_token().get_type() == Type.FUNCTION
 
 
+def test_lexer_with_key_word_print():
+    sys.stdin = io.StringIO("print")
+    source = Source()
+    lexer = Lexer(source)
+
+    lexer.build_next_token()
+    assert lexer.get_token().get_value() == "print"
+    assert lexer.get_token().get_type() == Type.PRINT
+
+
 def test_lexer_with_special_character_OP_SQUARE_BRACKET():
     sys.stdin = io.StringIO("[")
     source = Source()

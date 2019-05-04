@@ -15,9 +15,25 @@ class List(Node):
     def visit(self):
         return self.elements
 
+    def __eq__(self, other):
+        if self.length() == other.length():
+            for idx in range(0, self.length - 1):
+                if self.elements[i] != other.get(idx):
+                    return False
+            return True
+        return False
+
     def __repr__(self):
         buff = f"[LIST:"
         for element in self.elements:
             buff += f" {element}"
         buff += "]"
         return buff
+
+    def length(self):
+        return len(self.elements)
+
+    def get(self, idx):
+        if idx < len(self.elements):
+            return elements[idx]
+        return None

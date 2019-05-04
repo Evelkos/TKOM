@@ -41,6 +41,7 @@ class Type(Enum):
     UNIDENTIFIED = auto()
     MAIN = auto()
     FUNCTION = auto()
+    PRINT = auto()
 
 class Symbol:
     special_characters = {
@@ -86,6 +87,7 @@ class Symbol:
         'delete': Type.DELETE,
         'main': Type.MAIN,
         'function' : Type.FUNCTION,
+        'print': Type.PRINT,
     }
 
 class Token:

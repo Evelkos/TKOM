@@ -17,5 +17,8 @@ class Bool(Value):
     def visit(self):
         super().visit()
 
+    def __eq__(self, other):
+        return self.value == other.value
+
     def __repr__(self):
         return f"[BOOL: {self.value}]"

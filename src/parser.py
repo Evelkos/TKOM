@@ -14,6 +14,7 @@ if __name__ == "__main__":
     from ast.number import Number
     from ast.list import List
     from ast.function_body import FunctionBody
+    from ast.print_function import PrintFunction
 
 else:
     from .source import Source
@@ -29,6 +30,7 @@ else:
     from .ast.number import Number
     from .ast.list import List
     from .ast.function_body import FunctionBody
+    from .ast.print_function import PrintFunction
 
 
 class Parser():
@@ -40,6 +42,7 @@ class Parser():
 
 
     def consume(self):
+        print(self.current_token)
         self.current_token = self.get_next_token()
 
 
@@ -81,11 +84,17 @@ class Parser():
         identifier = self.parse_identifier()
 
         self.require_and_consume(Type.OP_BRACKET)
-        arguments = self.parse_arguments()
+        if self.current_token.get_type() != Type.CL_BRACKET:
+            arguments = self.parse_arguments()
+        else:
+            arguments = None
         self.require_and_consume(Type.CL_BRACKET)
 
         self.require_and_consume(Type.OP_CURLY_BRACKET)
-        body = self.parse_function_body()
+        if self.current_token.get_type() != Type.CL_CURLY_BRACKET:
+            body = self.parse_function_body()
+        else:
+            body = None
         self.require_and_consume(Type.CL_CURLY_BRACKET)
 
         function = Function(identifier, arguments, body)
@@ -101,7 +110,6 @@ class Parser():
     def parse_arguments(self):
         variable_types = [Type.LIST_TYPE, Type.NUMBER_TYPE, Type.BOOL_TYPE]
         arguments = []
-
 
         while self.current_token.get_type() in variable_types:
             argument_type = self.parse_type()
@@ -124,33 +132,57 @@ class Parser():
 
 
     def parse_function_body(self):
-        return_statement = []
-        while self.current_token.get_type() != Type.CL_CURLY_BRACKET and self.current_token.get_type() != Type.RETURN:
-            continue
+        end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
+        if self.current_token.get_type() not in end_of_content_token_types:
+            content = self.parse_content()
+        else:
+            content = None
 
-        return_statement = None
-        content = None
         if self.current_token.get_type() == Type.RETURN:
             return_statement = self.parse_return()
+        else:
+            return_statement = None
 
         function_body = FunctionBody(return_statement, content)
-        print(function_body)
         return function_body
+
+
+    def parse_content(self):
+        lines = []
+
+        end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
+        while self.current_token.get_type() not in end_of_content_token_types:
+            line = self.parse_line()
+            lines.append(line)
+
+        return lines
+
+
+    def parse_line(self):
+        line = None
+        if self.current_token.get_type() == Type.PRINT:
+            line = self.parse_print()
+        self.require_and_consume(Type.SEMICOLON)
+        return line
+
+
+    def parse_print(self):
+        self.require_and_consume(Type.PRINT)
+        identifier = self.parse_identifier()
+        print_node = PrintFunction(identifier)
+        return print_node
 
     def parse_return(self):
         self.require_and_consume(Type.RETURN)
         if self.current_token.get_type() == Type.BOOL:
             return_statement = self.parse_bool()
-            return return_statement
         elif self.current_token.get_type() == Type.NUMBER:
             return_statement = self.parse_number()
-            return return_statement
         elif self.current_token.get_type() == Type.IDENTIFIER:
             return_statement = self.parse_identifier()
-            return return_statement
         else:
             return_statement = self.parse_list()
-            return return_statement
+        return return_statement
 
 
     def parse_bool(self):
