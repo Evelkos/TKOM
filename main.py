@@ -10,7 +10,10 @@ if __name__ == "__main__":
     source = Source()
     lexer = Lexer(source)
     parser = Parser(source, lexer)
-    parser.parse_program()
+    functions = parser.parse()
+
+    for function in functions:
+        print(function)
     # while lexer.get_token().get_type() != Type.EOF:
     #     lexer.build_next_token()
     #     print(lexer.get_token())

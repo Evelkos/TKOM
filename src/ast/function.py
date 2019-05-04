@@ -12,13 +12,14 @@ else:
 
 class Function(Node):
     def __init__(self, function_identifier, arguments, body):
+        super().__init__()
         self.identifier = function_identifier
         self.arguments = arguments
         self.body = body
 
     # TODO
-    def visit():
+    def visit(self):
         return self.identifier
 
     def __repr__(self):
-        return f"[Function: {self.identifier}, {self.arguments}]"
+        return f"[Function: {self.identifier}, {self.arguments}, {self.body}]"

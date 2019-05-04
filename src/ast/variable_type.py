@@ -1,21 +1,20 @@
-# identifier.py
-
+# function.py
 if __name__ == "__main__":
     from node import Node
-elif __name__ == "identifier":
+elif __name__ == "type":
     from node import Node
 else:
     from .node import Node
 
 
-class Identifier(Node):
-    def __init__(self, name):
+class VariableType(Node):
+    def __init__(self, type_name):
         super().__init__()
-        self.name = name
+        self.type = type_name
 
     # TODO
     def visit(self):
-        return self.name
+        return self.type
 
     def __repr__(self):
-        return f"[Identifier: {self.name}]"
+        return f"[Type: {self.type}]"

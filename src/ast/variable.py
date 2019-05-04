@@ -9,11 +9,12 @@ else:
 
 class Variable(Node):
     def __init__(self, variable_type, variable_identifier,):
+        super().__init__()
         self.type = variable_type
         self.identifier = variable_identifier
 
     # TODO
-    def visit():
+    def visit(self):
         return self.name
 
     def __repr__(self):

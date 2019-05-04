@@ -7,6 +7,7 @@ class Type(Enum):
     LIST_TYPE = auto()
     NUMBER = auto()
     NUMBER_TYPE = auto()
+    BOOL = auto()
     BOOL_TYPE = auto()
     PLUS = auto()
     MINUS = auto()
@@ -75,6 +76,8 @@ class Symbol:
         'list': Type.LIST_TYPE,
         'number': Type.NUMBER_TYPE,
         'bool': Type.BOOL_TYPE,
+        'true': Type.BOOL,
+        'false': Type.BOOL,
         'return': Type.RETURN,
         'filter': Type.FILTER,
         'each': Type.EACH,

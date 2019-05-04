@@ -151,6 +151,26 @@ def test_lexer_with_key_word_delete():
     assert lexer.get_token().get_type() == Type.DELETE
 
 
+def test_lexer_with_key_word_true():
+    sys.stdin = io.StringIO("true")
+    source = Source()
+    lexer = Lexer(source)
+
+    lexer.build_next_token()
+    assert lexer.get_token().get_value() == "true"
+    assert lexer.get_token().get_type() == Type.BOOL
+
+
+def test_lexer_with_key_word_false():
+    sys.stdin = io.StringIO("false")
+    source = Source()
+    lexer = Lexer(source)
+
+    lexer.build_next_token()
+    assert lexer.get_token().get_value() == "false"
+    assert lexer.get_token().get_type() == Type.BOOL
+
+
 def test_lexer_with_key_word_eof():
     sys.stdin = io.StringIO("")
     source = Source()
