@@ -1,13 +1,10 @@
 # function.py
 if __name__ == "__main__":
     from node import Node
-    from identifier import identifier
 elif __name__ == "function":
     from node import Node
-    from identifier import Identifier
 else:
     from .node import Node
-    from .identifier import Identifier
 
 
 class Function(Node):

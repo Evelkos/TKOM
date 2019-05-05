@@ -9,27 +9,27 @@ else:
 
 
 class ListOperation(Node):
-    def __init__(self, source_list, operation):
-        self.list = source_list
-        self.operation = operation
+    def __init__(self, source_list):
+        super().__init__()
+        self.source_list = source_list
 
     def visit(self):
-        return self.list
+        return self.source_list
 
     def __repr__(self):
-        return f"[ListOperation: {self.list}, {self.operation}]"
+        return f"[ListOperation: {self.source_list}]"
 
 
 class Filter(ListOperation):
-    def __init__(self, source_list, operation):
-        super().__init__(source_list, operation)
-        self.condition
+    def __init__(self, source_list, condition):
+        self.source_list = source_list
+        self.condition = condition
 
     def visit(self):
         return self.list
 
     def __repr__(self):
-        return f"[Filter: {self.list}, {self.operation}, {self.condition}]"
+        return f"[Filter: {self.source_list}, {self.condition}]"
 
 
 class FilterCondition(Node):
@@ -45,23 +45,48 @@ class FilterCondition(Node):
 
 
 class Each(ListOperation):
-    def __init__(self, operation, standard_operation):
-        self.operation = operation
-        self.operation = standard_operation
+    def __init__(self, source_list, operator, expression):
+        self.source_list = source_list
+        self.operator = operator
+        self.expression = expression
 
     def visit(self):
-        return self.operation
+        return self.expression
 
     def __repr__(self):
-        return f"[Each: {self.operation}, {self.standard_operation}]"
+        return f"[Each: {self.source_list}, {self.operator}, {self.expression}]"
 
 
 class Get(ListOperation):
-    def __init__(self, idx):
+    def __init__(self, source_list, idx):
+        self.source_list = source_list
         self.idx = idx
 
     def visit(self):
         return self.idx
 
     def __repr__(self):
-        return f"[Each: {self.idx}]"
+        return f"[Get: {self.source_list}, {self.idx}]"
+
+
+class Length(ListOperation):
+    def __init__(self, source_list):
+        self.source_list = source_list
+
+    def visit(self):
+        return 0
+
+    def __repr__(self):
+        return f"[Length: {self.source_list}]"
+
+
+class Delete(ListOperation):
+    def __init__(self, source_list, idx):
+        self.source_list = source_list
+        self.idx = idx
+
+    def visit(self):
+        return self.idx
+
+    def __repr__(self):
+        return f"[Delete: {self.source_list}, {self.idx}]"

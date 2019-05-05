@@ -19,4 +19,4 @@ class Variable(Node):
         return self.name
 
     def __repr__(self):
-        return f"[Variable: {self.type}, {self.identifier}]"
+        return f"[Variable: {self.type}, {self.identifier}, {self.value}]"

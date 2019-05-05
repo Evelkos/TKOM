@@ -14,10 +14,11 @@ if __name__ == "__main__":
     from ast.number import Number
     from ast.list import List
     from ast.function_body import FunctionBody
+    from ast.function_call import FunctionCall
     from ast.print_function import PrintFunction
     from ast.declaration import Declaration
     from ast.expression import Expression
-    from ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get
+    from ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 
 else:
     from .source import Source
@@ -33,10 +34,11 @@ else:
     from .ast.number import Number
     from .ast.list import List
     from .ast.function_body import FunctionBody
+    from .ast.function_call import FunctionCall
     from .ast.print_function import PrintFunction
     from .ast.declaration import Declaration
     from .ast.expression import Expression
-    from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get
+    from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 
 
 variable_types = [Type.LIST_TYPE, Type.NUMBER_TYPE, Type.BOOL_TYPE]
@@ -51,7 +53,6 @@ class Parser():
 
 
     def consume(self):
-        print(self.current_token)
         self.current_token = self.get_next_token()
 
 
@@ -189,102 +190,120 @@ class Parser():
     def parse_declaration(self):
         variable_type = self.parse_type()
         variable_identifier = self.parse_identifier()
+        value = None
 
         if self.check_type(Type.ASSIGN):
             self.require_and_consume(Type.ASSIGN)
-            value = self.parse_standard_operation()
+            value = self.parse_expression()
 
-        declaration = Variable(variable_type, variable_identifier)
+        declaration = Variable(variable_type, variable_identifier, value)
+
+        return declaration
 
 
-    def parse_standard_operation(self):
-        # component[operator component]* | '('component[operator component]*')'
+    def parse_expression(self):
+        factor = self.parse_multiplication()
+        while self.check_type(Type.PLUS) or self.check_type(Type.MINUS):
+            operator = self.require_and_consume(self.current_token.get_type())
+            new_factor = self.parse_multiplication()
+            factor = Expression(factor, operator.get_value(), new_factor)
+        return factor
+
+
+    def parse_multiplication(self):
+        factor = self.parse_factor()
+        while self.check_type(Type.STAR) or self.check_type(Type.DIVIDE):
+            operator = self.require_and_consume(self.current_token.get_type())
+            new_factor = self.parse_factor()
+            factor = Expression(factor, operator.get_value(), new_factor)
+        return factor
+
+
+    def parse_factor(self):
         if self.check_type(Type.OP_BRACKET):
             self.require_and_consume(Type.OP_BRACKET)
-
-        component = self.parse_component()
-
-        operation_types = [Type.PLUS, Type.MINUS, Type.STAR, Type.DIVIDE]
-
-        if self.current_token.get_type() in operation_types:
-            operation = self.parse_operation()
-            expression = Expression(component, operation, self.parse_standard_operation())
-        else:
-            expression = component
-
-        if self.check_type(Type.CL_BRACKET):
+            factor = self.parse_expression()
             self.require_and_consume(Type.CL_BRACKET)
-
-        return expression
+        else:
+            factor = self.parse_component()
+        return factor
 
 
     def parse_component(self):
         if self.check_type(Type.BOOL):
-            return_statement = self.parse_bool()
+            return self.parse_bool()
         elif self.check_type(Type.NUMBER):
-            return_statement = self.parse_number()
+            return self.parse_number()
         elif self.check_type(Type.IDENTIFIER):
-            return_statement = self.parse_identifier()
+            identifier = self.parse_identifier()
             if self.check_type(Type.DOT):
-                return_statement = self.parse_list_operation(return_statement)
-                print("TODO - list operation")
-                parse_list_operation()
+                return self.parse_list_component(identifier)
             elif self.check_type(Type.OP_BRACKET):
-                print("TODO - function call")
+                return self.parse_function_call(identifier)
+            else:
+                return identifier
         else:
-            return_statement = self.parse_list()
+            standard_list = self.parse_list()
             if self.check_type(Type.DOT):
-                print("TODO - list operation")
-                parse_list_operation()
+                return self.parse_list_component(standard_list)
+            else:
+                return standard_list
+
+
+    def parse_function_call(self, function_identifier):
+        self.require_and_consume(Type.OP_BRACKET)
+        arguments = self.parse_elements(Type.CL_BRACKET)
+        self.require_and_consume(Type.CL_BRACKET)
+        return FunctionCall(function_identifier, arguments)
+
+
+    def parse_list_component(self, tmp_list):
+        while self.check_type(Type.DOT):
+            tmp_list = self.parse_list_operation(tmp_list)
+        return tmp_list
 
 
     def parse_list_operation(self, tmp_list):
         self.require_and_consume(Type.DOT)
         if self.check_type(Type.FILTER):
-            node = self.parse_list_operation_filter()
+            return self.parse_list_operation_filter(tmp_list)
         elif self.check_type(Type.EACH):
-            node = self.parse_list_operation_each()
+            return self.parse_list_operation_each(tmp_list)
         elif self.check_type(Type.GET):
-            token = self.require_and_consume(Type.GET)
-            print("TODO - get")
+            return self.parse_list_operation_get(tmp_list)
         elif self.check_type(Type.LENGTH):
-            token = self.require_and_consume(Type.LENGTH)
-            print("TODO - lenght")
+            return self.parse_list_operation_length(tmp_list)
         else:
-            token = self.require_and_consume(Type.DELETE)
-            print("TODO - delete")
+            return self.parse_list_operation_delete(tmp_list)
 
 
-    def parse_list_operation_filter(self):
+    def parse_list_operation_filter(self, tmp_list):
         self.require_and_consume(Type.FILTER)
         self.require_and_consume(Type.OP_BRACKET)
-
-        conditions = []
         
-        single_condition = parse_single_condition()
-        conditions.append(single_condition)
+        single_condition = self.parse_single_condition()
+        conditions = [single_condition]
 
         while self.check_type(Type.AND):
-            single_condition = parse_single_condition()
+            self.require_and_consume(Type.AND)
+            single_condition = self.parse_single_condition()
             conditions.append(single_condition)
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        filter_operation = Filter(tmp_list, conditions)
-        return filter_operation
+        return Filter(tmp_list, conditions)
 
 
     def parse_single_condition(self):
         if self.current_token.get_value() == "x":
             self.consume()
 
-        possible_operators = [Type.LESS_THAN, Type.GREATER_THAN, LESS_OR_EQUAL_TO, GREATER_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO]
+        possible_operators = [Type.LESS_THAN, Type.GREATER_THAN, Type.LESS_OR_EQUAL_TO, Type.GREATER_OR_EQUAL_TO, Type.EQUAL_TO, Type.NOT_EQUAL_TO]
         if self.current_token.get_type() in possible_operators:
-            token = self.current_token
+            operator = self.current_token.get_value()
             self.consume()
-            argument = self.parse_component()
-            filter_condition = FilterCondition(token.value(), argument)
-            return filter_condition
+            expression = self.parse_expression()
+            return FilterCondition(operator, expression)
         else:
             raise InvalidSyntax(
                 f"On position {self.source.get_position()} "
@@ -294,27 +313,60 @@ class Parser():
             )
 
 
-    def parse_list_operation_each(self):
+    def parse_list_operation_each(self, tmp_list):
         self.require_and_consume(Type.EACH)
         self.require_and_consume(Type.OP_BRACKET)
 
         operation = self.parse_operation()
-        standard_operation = self.parse_standard_operation()
+        self.require_and_consume(Type.COMMA)
+        standard_operation = self.parse_expression()
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        each_operation = Each(operation, standard_operation)
-        return each_operation
+        return Each(tmp_list, operation, standard_operation)
+
+
+    def parse_list_operation_get(self, tmp_list):
+        self.require_and_consume(Type.GET)
+        self.require_and_consume(Type.OP_BRACKET)
+
+        # TODO - dodanie get ze zmienna
+        token = self.require_and_consume(Type.NUMBER)
+        number = token.get_value()
+
+        self.require_and_consume(Type.CL_BRACKET)
+
+        return Get(tmp_list, number)
+
+
+    def parse_list_operation_length(self, tmp_list):
+        self.require_and_consume(Type.LENGTH)
+        self.require_and_consume(Type.OP_BRACKET)
+        self.require_and_consume(Type.CL_BRACKET)
+        return Length(tmp_list)
+
+
+    def parse_list_operation_delete(self, tmp_list):
+        self.require_and_consume(Type.DELETE)
+        self.require_and_consume(Type.OP_BRACKET)
+
+        # TODO - dodanie get ze zmienna
+        token = self.require_and_consume(Type.NUMBER)
+        number = token.get_value()
+
+        self.require_and_consume(Type.CL_BRACKET)
+
+        return Delete(tmp_list, number)
 
 
     def parse_operation(self):
         if self.check_type(Type.PLUS):
             operation = Type.PLUS
-        if self.check_type(Type.MINUS):
+        elif self.check_type(Type.MINUS):
             operation = Type.MINUS
-        if self.check_type(Type.STAR):
+        elif self.check_type(Type.STAR):
             operation = Type.STAR
-        if else::
+        else:
             operation = Type.DIVIDE
 
         self.consume()
@@ -347,9 +399,14 @@ class Parser():
 
     def parse_list(self):
         self.require_and_consume(Type.OP_SQUARE_BRACKET)
+        elements = self.parse_elements(Type.CL_SQUARE_BRACKET)
+        self.require_and_consume(Type.CL_SQUARE_BRACKET)
+        return List(elements)
 
+
+    def parse_elements(self, stop_type):
         elements = []
-        while self.current_token.get_type() != Type.CL_SQUARE_BRACKET:
+        while self.current_token.get_type() != stop_type:
             if self.current_token.get_type() == Type.BOOL:
                 element = self.parse_bool()
             elif self.current_token.get_type() == Type.NUMBER:
@@ -361,7 +418,4 @@ class Parser():
             elements.append(element)
             if self.current_token.get_type() == Type.COMMA:
                 self.consume()
-
-        self.require_and_consume(Type.CL_SQUARE_BRACKET)
-        return_list = List(elements)
-        return return_list
+        return elements
