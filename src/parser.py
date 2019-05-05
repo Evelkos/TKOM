@@ -312,9 +312,11 @@ class Parser():
         self.require_and_consume(Type.DELETE)
         self.require_and_consume(Type.OP_BRACKET)
 
-        # TODO - dodanie get ze zmienna
-        token = self.require_and_consume(Type.NUMBER)
-        number = token.get_value()
+        if self.check_type(Type.NUMBER):
+            argument = self.parse_number()
+        else:
+            token = self.require_and_consume(Type.IDENTIFIER)
+            argument = self.parse_identifier()
 
         self.require_and_consume(Type.CL_BRACKET)
 
@@ -355,13 +357,15 @@ class Parser():
         self.require_and_consume(Type.GET)
         self.require_and_consume(Type.OP_BRACKET)
 
-        # TODO - dodanie get ze zmienna
-        token = self.require_and_consume(Type.NUMBER)
-        number = token.get_value()
+        if self.check_type(Type.NUMBER):
+            argument = self.parse_number()
+        else:
+            token = self.require_and_consume(Type.IDENTIFIER)
+            argument = self.parse_identifier()
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Get(tmp_list, number)
+        return Get(tmp_list, argument)
 
 
     def parse_list_operation_length(self, tmp_list):
@@ -420,17 +424,10 @@ class Parser():
             self.consume()
 
         possible_operators = [Type.LESS_THAN, Type.GREATER_THAN, Type.LESS_OR_EQUAL_TO, Type.GREATER_OR_EQUAL_TO, Type.EQUAL_TO, Type.NOT_EQUAL_TO]
-        if self.current_token.get_type() in possible_operators:
-            operator = self.get_and_consume_token().get_value()
-            expression = self.parse_expression()
-            return FilterCondition(operator, expression)
-        else:
-            raise InvalidSyntax(
-                f"On position {self.source.get_position()} "
-                f"expected '{possible_operators}', "
-                f"got {self.current_token.get_type()}: "
-                f"{self.current_token.get_value()}"
-            )
+        token = self.require_and_consume_token_in_types(possible_operators)
+        operator = token.get_value()
+        expression = self.parse_expression()
+        return FilterCondition(operator, expression)
 
 
     def parse_type(self):

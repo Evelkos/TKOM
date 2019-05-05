@@ -37,6 +37,9 @@ class FilterCondition(Node):
         self.operator = operator
         self.r_value = r_value
 
+    def __eq__(self, other):
+        return self.operator == other.operator and self.r_value == other.r_value
+
     def visit(self):
         return self.operator, self.r_value
 
@@ -62,22 +65,28 @@ class Get(ListOperation):
         self.source_list = source_list
         self.idx = idx
 
-    def visit(self):
-        return self.idx
+    def __eq__(self, other):
+        return len(self.source_list) == len(other.source_list) and self.idx == other.idx
 
     def __repr__(self):
         return f"[Get: {self.source_list}, {self.idx}]"
+
+    def visit(self):
+        return self.idx
 
 
 class Length(ListOperation):
     def __init__(self, source_list):
         self.source_list = source_list
 
-    def visit(self):
-        return 0
+    def __eq__(self, other):
+        return len(self.source_list) == len(other.source_list)
 
     def __repr__(self):
         return f"[Length: {self.source_list}]"
+
+    def visit(self):
+        return 0
 
 
 class Delete(ListOperation):

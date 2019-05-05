@@ -13,12 +13,12 @@ class Bool(Value):
     def __init__(self, value):
         super().__init__(value)
 
-    # TODO
-    def visit(self):
-        super().visit()
-
     def __eq__(self, other):
         return self.value == other.value
 
     def __repr__(self):
         return f"[BOOL: {self.value}]"
+
+    # TODO
+    def visit(self):
+        super().visit()

@@ -11,14 +11,10 @@ class List(Node):
     def __init__(self, elements):
         self.elements = elements
 
-    # TODO
-    def visit(self):
-        return self.elements
-
     def __eq__(self, other):
         if self.length() == other.length():
-            for idx in range(0, self.length - 1):
-                if self.elements[i] != other.get(idx):
+            for idx in range(0, len(self.elements) - 1):
+                if self.elements[idx] != other.elements[idx]:
                     return False
             return True
         return False
@@ -29,6 +25,10 @@ class List(Node):
             buff += f" {element}"
         buff += "]"
         return buff
+    # TODO
+    
+    def visit(self):
+        return self.elements
 
     def length(self):
         return len(self.elements)

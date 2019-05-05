@@ -13,9 +13,12 @@ class Identifier(Node):
         super().__init__()
         self.name = name
 
-    # TODO
-    def visit(self):
-        return self.name
+    def __eq__(self, other):
+        return self.name == other.name
 
     def __repr__(self):
         return f"[Identifier: {self.name}]"
+
+    # TODO
+    def visit(self):
+        return self.name
