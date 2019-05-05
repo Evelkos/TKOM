@@ -14,9 +14,12 @@ class FunctionCall(Node):
         self.identifier = function_identifier
         self.arguments = arguments
 
-    # TODO
-    def visit(self):
-        return self.identifier
+    def __eq__(self, other):
+        return self.identifier == other.identifier and self.arguments == other.arguments
 
     def __repr__(self):
         return f"[FunctionCall: {self.identifier}, {self.arguments}]"
+
+    # TODO
+    def visit(self):
+        return self.identifier

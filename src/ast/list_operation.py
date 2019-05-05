@@ -21,15 +21,18 @@ class ListOperation(Node):
 
 
 class Filter(ListOperation):
-    def __init__(self, source_list, condition):
+    def __init__(self, source_list, conditions):
         self.source_list = source_list
-        self.condition = condition
+        self.conditions = conditions
+
+    def __eq__(self, other):
+        return self.source_list == other.source_list and self.conditions == other.conditions
+
+    def __repr__(self):
+        return f"[Filter: {self.source_list}, {self.conditions}]"
 
     def visit(self):
         return self.list
-
-    def __repr__(self):
-        return f"[Filter: {self.source_list}, {self.condition}]"
 
 
 class FilterCondition(Node):
@@ -53,11 +56,14 @@ class Each(ListOperation):
         self.operator = operator
         self.expression = expression
 
-    def visit(self):
-        return self.expression
+    def __eq__(self, other):
+        return self.source_list == other.source_list and self.operator == other.operator and self.expression == other.expression
 
     def __repr__(self):
         return f"[Each: {self.source_list}, {self.operator}, {self.expression}]"
+
+    def visit(self):
+        return self.expression
 
 
 class Get(ListOperation):
@@ -66,7 +72,7 @@ class Get(ListOperation):
         self.idx = idx
 
     def __eq__(self, other):
-        return len(self.source_list) == len(other.source_list) and self.idx == other.idx
+        return self.source_list == other.source_list and self.idx == other.idx
 
     def __repr__(self):
         return f"[Get: {self.source_list}, {self.idx}]"
@@ -80,7 +86,7 @@ class Length(ListOperation):
         self.source_list = source_list
 
     def __eq__(self, other):
-        return len(self.source_list) == len(other.source_list)
+        return self.source_list == other.source_list
 
     def __repr__(self):
         return f"[Length: {self.source_list}]"
@@ -94,8 +100,11 @@ class Delete(ListOperation):
         self.source_list = source_list
         self.idx = idx
 
-    def visit(self):
-        return self.idx
+    def __eq__(self, other):
+        return self.source_list == other.source_list and self.idx == other.idx
 
     def __repr__(self):
         return f"[Delete: {self.source_list}, {self.idx}]"
+
+    def visit(self):
+        return self.idx

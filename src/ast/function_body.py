@@ -13,9 +13,12 @@ class FunctionBody(Node):
         self.return_statement = return_statement
         self.content = content
 
-    # TODO
-    def visit(self):
-        return self.return_statement
+    def __eq__(self, other):
+        return self.return_statement == other.return_statement and self.content == other.content
 
     def __repr__(self):
         return f"[FunctionBody: {self.return_statement}, {self.content}]"
+
+    # TODO
+    def visit(self):
+        return self.return_statement
