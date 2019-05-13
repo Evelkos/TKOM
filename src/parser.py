@@ -57,24 +57,16 @@ class Parser():
 
 
     def consume(self):
-        self.current_token = self.get_next_token()
-
-
-    def get_next_token(self):
+        old_token = self.current_token
         self.lexer.build_next_token()
-        return self.lexer.get_token()
-
-
-    def get_and_consume_token(self):
-        token = self.current_token
-        self.consume()
-        return token
+        new_token = self.lexer.get_token()
+        self.current_token = new_token
+        return old_token
 
 
     def require_and_consume(self, token_type):
         token = self.require_token(token_type)
-        self.consume()
-        return token
+        return self.consume()
 
 
     def require_and_consume_token_in_types(self, type_list):
@@ -197,12 +189,12 @@ class Parser():
 
         if type(factor) == Identifier:
             if self.check_type(Type.ASSIGN):
-                operator = self.get_and_consume_token().get_value()
+                operator = self.consume().get_value()
                 new_factor = self.parse_expression()
                 return Expression(factor, operator, new_factor)          
 
         while self.check_type(Type.PLUS) or self.check_type(Type.MINUS):
-            operator = self.get_and_consume_token()
+            operator = self.consume()
             new_factor = self.parse_multiplication()
             factor = Expression(factor, operator.get_value(), new_factor)
         return factor
@@ -367,7 +359,7 @@ class Parser():
     def parse_multiplication(self):
         factor = self.parse_factor()
         while self.check_type(Type.STAR) or self.check_type(Type.DIVIDE):
-            operator = self.get_and_consume_token().get_value()
+            operator = self.consume().get_value()
             new_factor = self.parse_factor()
             factor = Expression(factor, operator, new_factor)
         return factor
