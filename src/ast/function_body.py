@@ -1,8 +1,6 @@
 # function.py
 if __name__ == "__main__":
     from node import Node
-elif __name__ == "function":
-    from node import Node
 else:
     from .node import Node
 

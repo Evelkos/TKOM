@@ -2,9 +2,6 @@
 if __name__ == "__main__":
     from node import Node
     from value import Value
-elif __name__ == "bool":
-    from node import Node
-    from value import Value
 else:
     from .node import Node
     from .value import Value

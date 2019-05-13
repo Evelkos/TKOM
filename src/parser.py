@@ -1,7 +1,7 @@
 # parser.py
 
 
-if __name__ == "__main__" or __name__ == "parser":
+if __name__ == "__main__":
     from source import Source
     from token import Token, Type, Symbol
     from exceptions import InvalidSyntax
@@ -91,6 +91,7 @@ class Parser():
             f"got {self.current_token.get_type()}: "
             f"{self.current_token.get_value()}"
         )
+
 
     def require_token(self, token_type):
         if self.current_token.get_type() == token_type:
@@ -315,12 +316,11 @@ class Parser():
         if self.check_type(Type.NUMBER):
             argument = self.parse_number()
         else:
-            token = self.require_and_consume(Type.IDENTIFIER)
             argument = self.parse_identifier()
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Delete(tmp_list, number)
+        return Delete(tmp_list, argument)
 
 
     def parse_list_operation_each(self, tmp_list):
@@ -360,7 +360,6 @@ class Parser():
         if self.check_type(Type.NUMBER):
             argument = self.parse_number()
         else:
-            token = self.require_and_consume(Type.IDENTIFIER)
             argument = self.parse_identifier()
 
         self.require_and_consume(Type.CL_BRACKET)
