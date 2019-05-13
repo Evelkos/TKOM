@@ -53,9 +53,7 @@ class Parser():
 
 
     def check_type(self, token_type):
-        if self.current_token.get_type() == token_type:
-            return True
-        return False
+        return self.current_token.get_type() == token_type
 
 
     def consume(self):
@@ -95,8 +93,7 @@ class Parser():
 
     def require_token(self, token_type):
         if self.current_token.get_type() == token_type:
-            token = self.current_token
-            return token
+            return self.current_token
         else:
             raise InvalidSyntax(
                 f"On position {self.source.get_position()} "
@@ -117,15 +114,14 @@ class Parser():
     def parse_arguments(self):
         variable_types = [Type.LIST_TYPE, Type.NUMBER_TYPE, Type.BOOL_TYPE]
         arguments = []
-
-        while self.current_token.get_type() in variable_types:
-            variable_type = self.parse_type()
-            variable_name = self.parse_identifier()
-            arguments.append(Variable(variable_type, variable_name))
-            if self.current_token.get_type() == Type.COMMA:
-                self.consume()
-
-        return arguments
+        if self.current_token.get_type() != Type.CL_BRACKET:
+            while self.current_token.get_type() in variable_types:
+                variable_type = self.parse_type()
+                variable_name = self.parse_identifier()
+                arguments.append(Variable(variable_type, variable_name))
+                if self.current_token.get_type() == Type.COMMA:
+                    self.consume()
+            return arguments
 
 
     def parse_bool(self):
@@ -156,9 +152,9 @@ class Parser():
 
 
     def parse_content(self):
+        end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
         lines = []
 
-        end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
         while self.current_token.get_type() not in end_of_content_token_types:
             line = self.parse_line()
             lines.append(line)
@@ -224,38 +220,32 @@ class Parser():
 
     def parse_function(self):
         self.require_and_consume(Type.FUNCTION)
-
         identifier = self.parse_identifier()
-
         self.require_and_consume(Type.OP_BRACKET)
-        arguments = None
-        if self.current_token.get_type() != Type.CL_BRACKET:
-            arguments = self.parse_arguments()
+        arguments = self.parse_arguments()
         self.require_and_consume(Type.CL_BRACKET)
-
         self.require_and_consume(Type.OP_CURLY_BRACKET)
-        body = None
-        if self.current_token.get_type() != Type.CL_CURLY_BRACKET:
-            body = self.parse_function_body()
+        body = self.parse_function_body()
         self.require_and_consume(Type.CL_CURLY_BRACKET)
-
-        function = Function(identifier, arguments, body)
-        return function
+        return Function(identifier, arguments, body)
 
 
-    def parse_function_body(self):
+    def parse_function_body_content(self):
         end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
-        content = None
         if self.current_token.get_type() not in end_of_content_token_types:
-            content = self.parse_content()
+            return self.parse_content()
 
-        return_statement = None
+    def parse_function_body_return(self):
         if self.current_token.get_type() == Type.RETURN:
             return_statement = self.parse_return()
             self.require_and_consume(Type.SEMICOLON)
+            return return_statement
 
-        function_body = FunctionBody(return_statement, content)
-        return function_body
+    def parse_function_body(self):
+        if self.current_token.get_type() != Type.CL_CURLY_BRACKET:
+            content = self.parse_function_body_content()
+            return_statement = self.parse_function_body_return()
+            return FunctionBody(return_statement, content)
 
 
     def parse_function_call(self, function_identifier):
@@ -432,7 +422,3 @@ class Parser():
     def parse_type(self):
         token = self.require_and_consume_token_in_types(variable_types)
         return token.get_value()
-        # if self.current_token.get_type() in variable_types:
-        #     argument_type = VariableType(self.current_token.get_value())
-        #     self.consume()
-        # return argument_type

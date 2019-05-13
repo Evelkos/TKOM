@@ -1,12 +1,3 @@
-# from TKOM.src.parser import Parser
-# from TKOM.src.lexer import Lexer
-# from TKOM.src.source import Source
-# from TKOM.src.exceptions import InvalidSyntax
-# from TKOM.src.ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
-# from TKOM.src.ast.number import Number
-# from TKOM.src.ast.expression import Expression
-
-
 from TKOM.src.parser import Parser
 from TKOM.src.source import Source
 from TKOM.src.lexer import Lexer
@@ -27,8 +18,6 @@ from TKOM.src.ast.print_function import PrintFunction
 from TKOM.src.ast.declaration import Declaration
 from TKOM.src.ast.expression import Expression
 from TKOM.src.ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
-
-
 import io
 import pytest
 import sys
@@ -394,7 +383,8 @@ def test_parse_function_body_with_empty_return_and_content():
     lexer = Lexer(source)
     parser = Parser(source, lexer)
 
-    assert parser.parse_function_body() == FunctionBody(None, None)
+    # assert parser.parse_function_body() == FunctionBody(None, None)
+    assert parser.parse_function_body() == None
 
 
 def test_parse_function_body_with_empty_content():
