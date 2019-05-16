@@ -1,12 +1,12 @@
 # function.py
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+
+from .node import Node
 
 
 class FunctionBody(Node):
-    def __init__(self, return_statement, content):
+    def __init__(self, return_statement, content, line=None, column=None):
+        self.line = line
+        self.column = column
         super().__init__()
         self.return_statement = return_statement
         self.content = content

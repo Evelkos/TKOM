@@ -1,12 +1,11 @@
 # list.py
 
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+from .node import Node
 
 class List(Node):
-    def __init__(self, elements):
+    def __init__(self, elements, line=None, column=None):
+        self.line = line
+        self.column = column
         self.elements = elements
 
     def __eq__(self, other):

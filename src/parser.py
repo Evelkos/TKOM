@@ -1,44 +1,23 @@
 # parser.py
 
-
-if __name__ == "__main__":
-    from source import Source
-    from token import Token, Type, Symbol
-    from exceptions import InvalidSyntax
-    from ast.function import Function
-    from ast.identifier import Identifier
-    from ast.variable import Variable
-    from ast.variable_type import VariableType
-    from ast.node import Node
-    from ast.bool import Bool
-    from ast.number import Number
-    from ast.list import List
-    from ast.function_body import FunctionBody
-    from ast.function_call import FunctionCall
-    from ast.print_function import PrintFunction
-    from ast.declaration import Declaration
-    from ast.expression import Expression
-    from ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
-
-else:
-    from .source import Source
-    from .token import Token, Type, Symbol
-    from .lexer import Lexer
-    from .exceptions import InvalidSyntax
-    from .ast.function import Function
-    from .ast.identifier import Identifier
-    from .ast.variable import Variable
-    from .ast.variable_type import VariableType
-    from .ast.node import Node
-    from .ast.bool import Bool
-    from .ast.number import Number
-    from .ast.list import List
-    from .ast.function_body import FunctionBody
-    from .ast.function_call import FunctionCall
-    from .ast.print_function import PrintFunction
-    from .ast.declaration import Declaration
-    from .ast.expression import Expression
-    from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
+from .source import Source
+from .token import Token, Type, Symbol
+from .lexer import Lexer
+from .exceptions import InvalidSyntax
+from .ast.function import Function
+from .ast.identifier import Identifier
+from .ast.variable import Variable
+from .ast.variable_type import VariableType
+from .ast.node import Node
+from .ast.bool import Bool
+from .ast.number import Number
+from .ast.list import List
+from .ast.function_body import FunctionBody
+from .ast.function_call import FunctionCall
+from .ast.print_function import PrintFunction
+from .ast.declaration import Declaration
+from .ast.expression import Expression
+from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 
 
 variable_types = [Type.LIST_TYPE, Type.NUMBER_TYPE, Type.BOOL_TYPE]
@@ -110,7 +89,7 @@ class Parser():
             while self.current_token.get_type() in variable_types:
                 variable_type = self.parse_type()
                 variable_name = self.parse_identifier()
-                arguments.append(Variable(variable_type, variable_name))
+                arguments.append(Variable(variable_type, variable_name, None, None))
                 if self.current_token.get_type() == Type.COMMA:
                     self.consume()
             return arguments
@@ -118,7 +97,7 @@ class Parser():
 
     def parse_bool(self):
         token = self.require_and_consume(Type.BOOL)
-        result_bool = Bool(token.get_value())
+        result_bool = Bool(token.get_value(), None, None)
         return result_bool
 
 
@@ -163,7 +142,7 @@ class Parser():
             self.require_and_consume(Type.ASSIGN)
             value = self.parse_expression()
 
-        declaration = Variable(variable_type, variable_identifier, value)
+        declaration = Variable(variable_type, variable_identifier, value, None, None)
 
         return declaration
 
@@ -191,12 +170,12 @@ class Parser():
             if self.check_type(Type.ASSIGN):
                 operator = self.consume().get_value()
                 new_factor = self.parse_expression()
-                return Expression(factor, operator, new_factor)          
+                return Expression(factor, operator, new_factor, None, None)
 
         while self.check_type(Type.PLUS) or self.check_type(Type.MINUS):
             operator = self.consume()
             new_factor = self.parse_multiplication()
-            factor = Expression(factor, operator.get_value(), new_factor)
+            factor = Expression(factor, operator.get_value(), new_factor, None, None)
         return factor
 
 
@@ -219,7 +198,7 @@ class Parser():
         self.require_and_consume(Type.OP_CURLY_BRACKET)
         body = self.parse_function_body()
         self.require_and_consume(Type.CL_CURLY_BRACKET)
-        return Function(identifier, arguments, body)
+        return Function(identifier, arguments, body, None, None)
 
 
     def parse_function_body_content(self):
@@ -237,14 +216,14 @@ class Parser():
         if self.current_token.get_type() != Type.CL_CURLY_BRACKET:
             content = self.parse_function_body_content()
             return_statement = self.parse_function_body_return()
-            return FunctionBody(return_statement, content)
+            return FunctionBody(return_statement, content, None, None)
 
 
     def parse_function_call(self, function_identifier):
         self.require_and_consume(Type.OP_BRACKET)
         arguments = self.parse_elements(Type.CL_BRACKET)
         self.require_and_consume(Type.CL_BRACKET)
-        return FunctionCall(function_identifier, arguments)
+        return FunctionCall(function_identifier, arguments, None, None)
 
 
     def parse_identifier(self):
@@ -268,7 +247,7 @@ class Parser():
         self.require_and_consume(Type.OP_SQUARE_BRACKET)
         elements = self.parse_elements(Type.CL_SQUARE_BRACKET)
         self.require_and_consume(Type.CL_SQUARE_BRACKET)
-        return List(elements)
+        return List(elements, None, None)
 
 
     def parse_list_component(self, tmp_list):
@@ -302,7 +281,7 @@ class Parser():
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Delete(tmp_list, argument)
+        return Delete(tmp_list, argument, None, None)
 
 
     def parse_list_operation_each(self, tmp_list):
@@ -315,7 +294,7 @@ class Parser():
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Each(tmp_list, operation, standard_operation)
+        return Each(tmp_list, operation, standard_operation, None, None)
 
 
     def parse_list_operation_filter(self, tmp_list):
@@ -332,7 +311,7 @@ class Parser():
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Filter(tmp_list, conditions)
+        return Filter(tmp_list, conditions, None, None)
 
 
     def parse_list_operation_get(self, tmp_list):
@@ -346,14 +325,14 @@ class Parser():
 
         self.require_and_consume(Type.CL_BRACKET)
 
-        return Get(tmp_list, argument)
+        return Get(tmp_list, argument, None, None)
 
 
     def parse_list_operation_length(self, tmp_list):
         self.require_and_consume(Type.LENGTH)
         self.require_and_consume(Type.OP_BRACKET)
         self.require_and_consume(Type.CL_BRACKET)
-        return Length(tmp_list)
+        return Length(tmp_list, None, None)
 
 
     def parse_multiplication(self):
@@ -361,13 +340,13 @@ class Parser():
         while self.check_type(Type.STAR) or self.check_type(Type.DIVIDE):
             operator = self.consume().get_value()
             new_factor = self.parse_factor()
-            factor = Expression(factor, operator, new_factor)
+            factor = Expression(factor, operator, new_factor, None, None)
         return factor
 
 
     def parse_number(self):
         token = self.require_and_consume(Type.NUMBER)
-        result_number = Number(token.get_value())
+        result_number = Number(token.get_value(), None, None)
         return result_number
 
 
@@ -385,7 +364,7 @@ class Parser():
     def parse_print(self):
         self.require_and_consume(Type.PRINT)
         identifier = self.parse_identifier()
-        return PrintFunction(identifier)
+        return PrintFunction(identifier, None, None)
 
 
     def parse_return(self):
@@ -408,7 +387,7 @@ class Parser():
         token = self.require_and_consume_token_in_types(possible_operators)
         operator = token.get_value()
         expression = self.parse_expression()
-        return FilterCondition(operator, expression)
+        return FilterCondition(operator, expression, None, None)
 
 
     def parse_type(self):

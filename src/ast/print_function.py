@@ -1,10 +1,11 @@
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+#print_function.py
+
+from .node import Node
 
 class PrintFunction(Node):
-    def __init__(self, identifier):
+    def __init__(self, identifier, line=None, column=None):
+        self.line = line
+        self.column = column
         self.identifier = identifier
 
     def __eq__(self, other):

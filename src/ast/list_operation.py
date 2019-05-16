@@ -1,13 +1,12 @@
 # list_operations.py
 
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+from .node import Node
 
 
 class ListOperation(Node):
-    def __init__(self, source_list):
+    def __init__(self, source_list, line=None, column=None):
+        self.line = line
+        self.column = column
         super().__init__()
         self.source_list = source_list
 
@@ -19,7 +18,9 @@ class ListOperation(Node):
 
 
 class Filter(ListOperation):
-    def __init__(self, source_list, conditions):
+    def __init__(self, source_list, conditions, line=None, column=None):
+        self.line = line
+        self.column = column
         self.source_list = source_list
         self.conditions = conditions
 
@@ -34,7 +35,9 @@ class Filter(ListOperation):
 
 
 class FilterCondition(Node):
-    def __init__(self, operator, r_value):
+    def __init__(self, operator, r_value, line=None, column=None):
+        self.line = line
+        self.column = column
         self.operator = operator
         self.r_value = r_value
 
@@ -49,7 +52,9 @@ class FilterCondition(Node):
 
 
 class Each(ListOperation):
-    def __init__(self, source_list, operator, expression):
+    def __init__(self, source_list, operator, expression, line=None, column=None):
+        self.line = line
+        self.column = column
         self.source_list = source_list
         self.operator = operator
         self.expression = expression
@@ -65,7 +70,9 @@ class Each(ListOperation):
 
 
 class Get(ListOperation):
-    def __init__(self, source_list, idx):
+    def __init__(self, source_list, idx, line=None, column=None):
+        self.line = line
+        self.column = column
         self.source_list = source_list
         self.idx = idx
 
@@ -80,7 +87,9 @@ class Get(ListOperation):
 
 
 class Length(ListOperation):
-    def __init__(self, source_list):
+    def __init__(self, source_list, line=None, column=None):
+        self.line = line
+        self.column = column
         self.source_list = source_list
 
     def __eq__(self, other):
@@ -94,7 +103,9 @@ class Length(ListOperation):
 
 
 class Delete(ListOperation):
-    def __init__(self, source_list, idx):
+    def __init__(self, source_list, idx, line=None, column=None):
+        self.line = line
+        self.column = column
         self.source_list = source_list
         self.idx = idx
 

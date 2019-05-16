@@ -1,13 +1,12 @@
 # identifier.py
 
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+from .node import Node
 
 
 class Identifier(Node):
-    def __init__(self, name):
+    def __init__(self, name, line=None, column=None):
+        self.line = line
+        self.column = column
         super().__init__()
         self.name = name
 

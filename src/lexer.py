@@ -1,11 +1,7 @@
 # lexer.py
 
-if __name__ == "__main__":
-    from source import Source
-    from token import Token, Type, Symbol
-else:
-    from .source import Source
-    from .token import Token, Type, Symbol
+from .source import Source
+from .token import Token, Type, Symbol
 
 
 class Lexer:

@@ -1,13 +1,12 @@
 # function_call.py
 
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+from .node import Node
 
 
 class FunctionCall(Node):
-    def __init__(self, function_identifier, arguments):
+    def __init__(self, function_identifier, arguments, line=None, column=None):
+        self.line = line
+        self.column = column
         super().__init__()
         self.identifier = function_identifier
         self.arguments = arguments

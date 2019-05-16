@@ -1,12 +1,11 @@
 # declaration.py
 
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+from .node import Node
 
 class Declaration(Node):
-    def __init__(self, variable_type, identifier, value):
+    def __init__(self, variable_type, identifier, value, line=None, column=None):
+        self.line = line
+        self.column = column
         self.type = variable_type
         self.identifier = identifier
         self.value = value

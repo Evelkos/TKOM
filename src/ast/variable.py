@@ -1,12 +1,12 @@
 # variable.py
-if __name__ == "__main__":
-    from node import Node
-else:
-    from .node import Node
+
+from .node import Node
 
 
 class Variable(Node):
-    def __init__(self, variable_type, variable_identifier, value=None):
+    def __init__(self, variable_type, variable_identifier, value=None, line=None, column=None):
+        self.line = line
+        self.column = column
         super().__init__()
         self.type = variable_type
         self.identifier = variable_identifier
