@@ -15,6 +15,5 @@ class Bool(Value):
     def __repr__(self):
         return f"[BOOL: {self.value}]"
 
-    # TODO
-    def visit(self):
-        super().visit()
+    def accept(self, visitor):
+        visitor.visit_Bool()

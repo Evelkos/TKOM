@@ -8,9 +8,8 @@ class Value(Node):
         self.column = column
         self.value = value
 
-    # TODO
-    def visit(self):
-        return self.value
-
     def __repr__(self):
         return f"[Value: {self.value}]"
+
+    def accept(self, visitor):
+        visitor.visit_Value()

@@ -16,6 +16,5 @@ class Expression(Node):
     def __repr__(self):
         return f"[Expression: {self.left_operand}, {self.operation}, {self.right_operand}]"
 
-    # TODO
-    def visit(self):
-        return self.elements
+    def accept(self, visitor):
+        visitor.visit_Expression()

@@ -10,8 +10,8 @@ class ListOperation(Node):
         super().__init__()
         self.source_list = source_list
 
-    def visit(self):
-        return self.source_list
+    def accept(self, visitor):
+        visitor.visit_ListOperation()
 
     def __repr__(self):
         return f"[ListOperation: {self.source_list}]"
@@ -30,8 +30,8 @@ class Filter(ListOperation):
     def __repr__(self):
         return f"[Filter: {self.source_list}, {self.conditions}]"
 
-    def visit(self):
-        return self.list
+    def accept(self, visitor):
+        visitor.visit_Filter()
 
 
 class FilterCondition(Node):
@@ -44,11 +44,11 @@ class FilterCondition(Node):
     def __eq__(self, other):
         return self.operator == other.operator and self.r_value == other.r_value
 
-    def visit(self):
-        return self.operator, self.r_value
-
     def __repr__(self):
         return f"[FilterCondition: {self.operator}, {self.r_value}]"
+
+    def accept(self, visitor):
+        visitor.visit_FilterCondition()
 
 
 class Each(ListOperation):
@@ -65,8 +65,8 @@ class Each(ListOperation):
     def __repr__(self):
         return f"[Each: {self.source_list}, {self.operator}, {self.expression}]"
 
-    def visit(self):
-        return self.expression
+    def accept(self, visitor):
+        visitor.visit_Each()
 
 
 class Get(ListOperation):
@@ -82,8 +82,8 @@ class Get(ListOperation):
     def __repr__(self):
         return f"[Get: {self.source_list}, {self.idx}]"
 
-    def visit(self):
-        return self.idx
+    def accept(self, visitor):
+        visitor.visit_Get()
 
 
 class Length(ListOperation):
@@ -98,8 +98,8 @@ class Length(ListOperation):
     def __repr__(self):
         return f"[Length: {self.source_list}]"
 
-    def visit(self):
-        return 0
+    def accept(self, visitor):
+        visitor.visit_Length()
 
 
 class Delete(ListOperation):
@@ -115,5 +115,5 @@ class Delete(ListOperation):
     def __repr__(self):
         return f"[Delete: {self.source_list}, {self.idx}]"
 
-    def visit(self):
-        return self.idx
+    def accept(self, visitor):
+        visitor.visit_Delete()

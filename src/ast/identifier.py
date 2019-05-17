@@ -16,6 +16,5 @@ class Identifier(Node):
     def __repr__(self):
         return f"[Identifier: {self.name}]"
 
-    # TODO
-    def visit(self):
-        return self.name
+    def accept(self, visitor):
+        visitor.visit_Identifier()

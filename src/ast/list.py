@@ -22,15 +22,14 @@ class List(Node):
             buff += f" {element}"
         buff += "]"
         return buff
-    # TODO
-    
-    def visit(self):
-        return self.elements
 
-    def length(self):
-        return len(self.elements)
+    def accept(self, visitor):
+        visitor.visit_List()
 
     def get(self, idx):
         if idx < len(self.elements):
             return elements[idx]
         return None
+
+    def length(self):
+        return len(self.elements)

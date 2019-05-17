@@ -10,9 +10,8 @@ class VariableType(Node):
         super().__init__()
         self.type = type_name
 
-    # TODO
-    def visit(self):
-        return self.type
-
     def __repr__(self):
         return f"[Type: {self.type}]"
+
+    def accept(self, visitor):
+        visitor.visit_VariableType()

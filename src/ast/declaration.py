@@ -10,9 +10,9 @@ class Declaration(Node):
         self.identifier = identifier
         self.value = value
 
-    # TODO
-    def visit(self):
-        return self.elements
-
     def __repr__(self):
         return f"[Declaration: {self.type}, {self.identifier}, {self.value}]"
+
+    # TODO
+    def accept(self, visitor):
+        visitor.visit_Declaration()

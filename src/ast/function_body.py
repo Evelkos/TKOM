@@ -17,6 +17,5 @@ class FunctionBody(Node):
     def __repr__(self):
         return f"[FunctionBody: {self.return_statement}, {self.content}]"
 
-    # TODO
-    def visit(self):
-        return self.return_statement
+    def accept(self, visitor):
+        visitor.visit_FunctionBody()

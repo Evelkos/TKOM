@@ -9,12 +9,11 @@ class Number(Value):
         self.column = column
         self.value = int(value)
 
-    # TODO
-    def visit(self):
-        super().visit()
-
     def __eq__(self, other):
         return self.value == other.value
 
     def __repr__(self):
         return f"[NUMBER: {self.value}]"
+
+    def accept(self, visitor):
+        visitor.visit_Number()

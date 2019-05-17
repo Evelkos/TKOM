@@ -18,6 +18,5 @@ class Function(Node):
     def __repr__(self):
         return f"[Function: {self.identifier}, {self.arguments}, {self.body}]"
 
-    # TODO
-    def visit(self):
-        return self.identifier
+    def accept(self, visitor):
+        visitor.visit_Function()

@@ -18,6 +18,5 @@ class Variable(Node):
     def __repr__(self):
         return f"[Variable: {self.type}, {self.identifier}, {self.value}]"
 
-    # TODO
-    def visit(self):
-        return self.name
+    def accept(self, visitor):
+        visitor.visit_Variable()

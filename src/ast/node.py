@@ -8,5 +8,6 @@ class Node(ABC):
     	self.line = line
     	self.column = column
 
-    def visit(self):
+    @abstractmethod
+    def accept(self, visitor):
         pass
