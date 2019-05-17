@@ -39,7 +39,7 @@ class Type(Enum):
     LENGTH = auto()
     DELETE = auto()
     UNIDENTIFIED = auto()
-    MAIN = auto()
+    # MAIN = auto()
     FUNCTION = auto()
     PRINT = auto()
 
@@ -85,7 +85,7 @@ class Symbol:
         'get': Type.GET,
         'length': Type.LENGTH,
         'delete': Type.DELETE,
-        'main': Type.MAIN,
+        # 'main': Type.MAIN,
         'function' : Type.FUNCTION,
         'print': Type.PRINT,
     }

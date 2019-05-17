@@ -18,4 +18,4 @@ class FunctionBody(Node):
         return f"[FunctionBody: {self.return_statement}, {self.content}]"
 
     def accept(self, visitor):
-        visitor.visit_FunctionBody()
+        return visitor.visit_FunctionBody(self)

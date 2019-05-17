@@ -19,4 +19,4 @@ class Function(Node):
         return f"[Function: {self.identifier}, {self.arguments}, {self.body}]"
 
     def accept(self, visitor):
-        visitor.visit_Function()
+        return visitor.visit_Function(self)

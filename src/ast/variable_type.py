@@ -14,4 +14,4 @@ class VariableType(Node):
         return f"[Type: {self.type}]"
 
     def accept(self, visitor):
-        visitor.visit_VariableType()
+        return visitor.visit_VariableType(self)

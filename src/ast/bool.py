@@ -16,4 +16,4 @@ class Bool(Value):
         return f"[BOOL: {self.value}]"
 
     def accept(self, visitor):
-        visitor.visit_Bool()
+        return visitor.visit_Bool(self)

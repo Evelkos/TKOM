@@ -10,12 +10,12 @@ class ListOperation(Node):
         super().__init__()
         self.source_list = source_list
 
-    def accept(self, visitor):
-        visitor.visit_ListOperation()
-
     def __repr__(self):
         return f"[ListOperation: {self.source_list}]"
 
+    def accept(self, visitor):
+        return visitor.visit_ListOperation(self)
+        
 
 class Filter(ListOperation):
     def __init__(self, source_list, conditions, line=None, column=None):
@@ -31,7 +31,7 @@ class Filter(ListOperation):
         return f"[Filter: {self.source_list}, {self.conditions}]"
 
     def accept(self, visitor):
-        visitor.visit_Filter()
+        return visitor.visit_Filter(self)
 
 
 class FilterCondition(Node):
@@ -48,7 +48,7 @@ class FilterCondition(Node):
         return f"[FilterCondition: {self.operator}, {self.r_value}]"
 
     def accept(self, visitor):
-        visitor.visit_FilterCondition()
+        return visitor.visit_FilterCondition(self)
 
 
 class Each(ListOperation):
@@ -66,7 +66,7 @@ class Each(ListOperation):
         return f"[Each: {self.source_list}, {self.operator}, {self.expression}]"
 
     def accept(self, visitor):
-        visitor.visit_Each()
+        return visitor.visit_Each(self)
 
 
 class Get(ListOperation):
@@ -83,7 +83,7 @@ class Get(ListOperation):
         return f"[Get: {self.source_list}, {self.idx}]"
 
     def accept(self, visitor):
-        visitor.visit_Get()
+        return visitor.visit_Get(self)
 
 
 class Length(ListOperation):
@@ -99,7 +99,7 @@ class Length(ListOperation):
         return f"[Length: {self.source_list}]"
 
     def accept(self, visitor):
-        visitor.visit_Length()
+        return visitor.visit_Length(self)
 
 
 class Delete(ListOperation):
@@ -116,4 +116,4 @@ class Delete(ListOperation):
         return f"[Delete: {self.source_list}, {self.idx}]"
 
     def accept(self, visitor):
-        visitor.visit_Delete()
+        return visitor.visit_Delete(self)

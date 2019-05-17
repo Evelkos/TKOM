@@ -181,16 +181,6 @@ def test_lexer_with_key_word_eof():
     assert lexer.get_token().get_type() == Type.EOF
 
 
-def test_lexer_with_key_word_main():
-    sys.stdin = io.StringIO("main")
-    source = Source()
-    lexer = Lexer(source)
-
-    lexer.build_next_token()
-    assert lexer.get_token().get_value() == "main"
-    assert lexer.get_token().get_type() == Type.MAIN
-
-
 def test_lexer_with_key_word_function():
     sys.stdin = io.StringIO("function")
     source = Source()

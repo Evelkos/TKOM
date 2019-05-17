@@ -24,7 +24,7 @@ class List(Node):
         return buff
 
     def accept(self, visitor):
-        visitor.visit_List()
+        return visitor.visit_List(self)
 
     def get(self, idx):
         if idx < len(self.elements):

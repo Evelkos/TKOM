@@ -12,4 +12,4 @@ class Value(Node):
         return f"[Value: {self.value}]"
 
     def accept(self, visitor):
-        visitor.visit_Value()
+        return visitor.visit_Value(self)

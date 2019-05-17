@@ -5,15 +5,19 @@ from src.lexer import Lexer
 from src.token import Type
 from src.source import Source
 from src.parser import Parser
+from src.visitor import Visitor
+from src.interpreter import Interpreter
 
 if __name__ == "__main__":
     source = Source()
     lexer = Lexer(source)
     parser = Parser(source, lexer)
-    functions = parser.parse()
+    visitor = Visitor()
+    interpreter = Interpreter(parser, visitor)
+    interpreter.run()
 
-    for function in functions:
-        print(function)
-    # while lexer.get_token().get_type() != Type.EOF:
-    #     lexer.build_next_token()
-    #     print(lexer.get_token())
+    # functions = parser.parse()
+
+    # for function in functions:
+    #     print()
+    #     print(function)

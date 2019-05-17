@@ -15,4 +15,4 @@ class PrintFunction(Node):
         return f"[PRINT: {self.identifier}]"
 
     def accept(self, visitor):
-        visitor.visit_PrintFunction()
+        return visitor.visit_PrintFunction(self)

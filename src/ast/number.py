@@ -16,4 +16,4 @@ class Number(Value):
         return f"[NUMBER: {self.value}]"
 
     def accept(self, visitor):
-        visitor.visit_Number()
+        return visitor.visit_Number(self)

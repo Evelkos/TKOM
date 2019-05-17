@@ -19,4 +19,4 @@ class Variable(Node):
         return f"[Variable: {self.type}, {self.identifier}, {self.value}]"
 
     def accept(self, visitor):
-        visitor.visit_Variable()
+        return visitor.visit_Variable(self)

@@ -17,4 +17,4 @@ class Expression(Node):
         return f"[Expression: {self.left_operand}, {self.operation}, {self.right_operand}]"
 
     def accept(self, visitor):
-        visitor.visit_Expression()
+        return visitor.visit_Expression(self)

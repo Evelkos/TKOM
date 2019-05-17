@@ -17,4 +17,4 @@ class Identifier(Node):
         return f"[Identifier: {self.name}]"
 
     def accept(self, visitor):
-        visitor.visit_Identifier()
+        return visitor.visit_Identifier(self)

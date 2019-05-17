@@ -15,4 +15,4 @@ class Declaration(Node):
 
     # TODO
     def accept(self, visitor):
-        visitor.visit_Declaration()
+        return visitor.visit_Declaration(self)
