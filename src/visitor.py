@@ -16,6 +16,7 @@ from .ast.print_function import PrintFunction
 from .ast.expression import Expression
 from .ast.list_operation import Filter, FilterCondition, Each, Get, Length, Delete
 from .env.deep_chain_map import DeepChainMap
+import operator
 
 
 
@@ -188,11 +189,40 @@ class Visitor():
             elements.append(element.accept(self))
         return elements
 
+    def is_element_meet_the_conditions(self, element, conditions):
+        operators = {
+            ">": operator.gt,
+            "<": operator.lt,
+            ">=": operator.ge,
+            "<=": operator.le,
+            "==": operator.eq,
+            "!=": operator.ne
+        }
+        for condition in conditions:
+            operation, expression = condition.accept(self)
+            operation = operators[operation]
+            if not (operation(element, expression.accept(self))):
+                return False
+        return True
+
     def visit_Filter(self, node):
-        return 0
+        source_list = node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+
+        print(f"Source list = {source_list}")
+
+        result_list = []
+
+        for element in source_list:
+            if self.is_element_meet_the_conditions(element, node.conditions):
+                result_list.append(element)
+
+        print(f"Result list = {result_list}")
+        return result_list
 
     def visit_FilterCondition(self, node):
-        return 0
+        return node.operator, node.r_value
 
     def visit_Each(self, node):
         source_list = node.source_list.accept(self)
