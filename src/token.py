@@ -1,6 +1,7 @@
 # token.py
 from enum import Enum, auto
 
+
 class Type(Enum):
     EOF = auto()
     IDENTIFIER = auto()
@@ -39,9 +40,9 @@ class Type(Enum):
     LENGTH = auto()
     DELETE = auto()
     UNIDENTIFIED = auto()
-    # MAIN = auto()
     FUNCTION = auto()
     PRINT = auto()
+
 
 class Symbol:
     special_characters = {
@@ -85,24 +86,21 @@ class Symbol:
         'get': Type.GET,
         'length': Type.LENGTH,
         'delete': Type.DELETE,
-        # 'main': Type.MAIN,
-        'function' : Type.FUNCTION,
+        'function': Type.FUNCTION,
         'print': Type.PRINT,
     }
 
+
 class Token:
-    def __init__(self, token_type = Type.IDENTIFIER, value = ""):
+    def __init__(self, token_type=Type.IDENTIFIER, value=""):
         self.token_type = token_type
         self.value = value
-
 
     def __repr__(self):
         return f"(token_type={self.token_type}, value={self.value})"
 
-
     def get_type(self):
         return self.token_type
-
 
     def get_value(self):
         return self.value

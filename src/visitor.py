@@ -1,32 +1,21 @@
 # visitor.py
-from .source import Source
-from .token import Token, Type, Symbol
-from .lexer import Lexer
 from .exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue
-from .ast.function import Function
 from .ast.identifier import Identifier
-from .ast.variable import Variable
-from .ast.node import Node
 from .ast.bool import Bool
 from .ast.number import Number
 from .ast.list import List
-from .ast.function_body import FunctionBody
-from .ast.function_call import FunctionCall
-from .ast.print_function import PrintFunction
 from .ast.expression import Expression
-from .ast.list_operation import Filter, FilterCondition, Each, Get, Length, Delete
-from .env.deep_chain_map import DeepChainMap
 import operator
 
 
-
-class Visitor():
+class Visitor:
     def __init__(self):
         self.map = []
         self.functions_def = []
         self.map.append({})
 
-    def calculate_bool_expression(self, left_operand, right_operand, operation):
+    @staticmethod
+    def calculate_bool_expression(left_operand, right_operand, operation):
         if isinstance(left_operand, bool) and isinstance(right_operand, bool):
             if operation == "+":
                 return left_operand or right_operand
@@ -35,7 +24,8 @@ class Visitor():
             else:
                 raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
-    def calculate_list_expression(self, left_operand, right_operand, operation):
+    @staticmethod
+    def calculate_list_expression(left_operand, right_operand, operation):
         if isinstance(left_operand, list) or (isinstance(right_operand, list)):
             if not isinstance(left_operand, list):
                 left_operand = [left_operand]
@@ -47,7 +37,8 @@ class Visitor():
             else:
                 raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
-    def calculate_numeric_expression(self, left_operand, right_operand, operation):
+    @staticmethod
+    def calculate_numeric_expression(left_operand, right_operand, operation):
         if isinstance(left_operand, int) and isinstance(right_operand, int):
             if operation == "+":
                 return left_operand + right_operand
@@ -56,11 +47,12 @@ class Visitor():
             elif operation == "*":
                 return left_operand * right_operand
             elif operation == "/":
-                return (int)(left_operand / right_operand)
+                return int(left_operand / right_operand)
             else:
                 raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
-    def convert_to_variable_object(self, value):
+    @staticmethod
+    def convert_to_variable_object(value):
         if isinstance(value, int):
             return Number(value)
         elif isinstance(value, bool):
@@ -85,7 +77,8 @@ class Visitor():
     def is_variable_in_map(self, variable_name):
         return variable_name in self.map[-1]
 
-    def is_value_type_correct(self, variable_value, variable_type):
+    @staticmethod
+    def is_value_type_correct(variable_value, variable_type):
         types_conversion = {
             "number": int,
             "list": list,
@@ -106,13 +99,14 @@ class Visitor():
             raise InvalidValue(variable_type, type(variable_value).__name__)
         raise Undeclared("variable", variable_name)
 
-    def visit_Bool(self, node):
+    @staticmethod
+    def visit_bool(node):
         if node.value == "true":
             return True
         elif node.value == "false":
             return False
 
-    def visit_Expression(self, node):
+    def visit_expression(self, node):
         left_operand = node.left_operand.accept(self)
         operation = node.operation
         right_operand = node.right_operand.accept(self)
@@ -126,7 +120,7 @@ class Visitor():
                 self.save_variable(left_operand, right_operand_value)
                 return
             else:
-                raise InvalidOperation("r-value", "=" ,"r-value")
+                raise InvalidOperation("r-value", "=", "r-value")
 
         if isinstance(left_operand, str):
             left_operand = self.get_variable_value(left_operand)
@@ -134,17 +128,16 @@ class Visitor():
             right_operand = self.get_variable_value(right_operand)
 
         return_value = self.calculate_bool_expression(left_operand, right_operand, operation)
-        if return_value == None:
+        if return_value is None:
             return_value = self.calculate_numeric_expression(left_operand, right_operand, operation)
-        if return_value == None:
+        if return_value is None:
             return_value = self.calculate_list_expression(left_operand, right_operand, operation)
         return return_value
-            
 
-    def visit_Function(self, node):
+    def visit_function(self, node):
         return node.body.accept(self)
 
-    def visit_FunctionBody(self, node):
+    def visit_function_body(self, node):
         for line in node.content:
             line.accept(self)
         return_statement = node.return_statement.accept(self)
@@ -152,9 +145,9 @@ class Visitor():
             return_statement = self.get_variable_value(return_statement)
         return return_statement
 
-    def visit_FunctionCall(self, node):
+    def visit_function_call(self, node):
         function_def = self.find_function_def(node.identifier, len(node.arguments))
-        if function_def != None:
+        if function_def is not None:
             self.map.append({})
 
             arguments_value = []
@@ -173,10 +166,11 @@ class Visitor():
             return result    
         raise Undeclared("function", node.identifier.accept(self))
 
-    def visit_Identifier(self, node):
+    @staticmethod
+    def visit_identifier(node):
         return node.name
 
-    def visit_List(self, node):
+    def visit_list(self, node):
         elements = []
         for element in node.elements:
             elements.append(element.accept(self))
@@ -198,7 +192,7 @@ class Visitor():
                 return False
         return True
 
-    def visit_Filter(self, node):
+    def visit_filter(self, node):
         source_list = node.source_list.accept(self)
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
@@ -209,10 +203,11 @@ class Visitor():
                 result_list.append(element)
         return result_list
 
-    def visit_FilterCondition(self, node):
+    @staticmethod
+    def visit_filter_condition(node):
         return node.operator, node.r_value
 
-    def visit_Each(self, node):
+    def visit_each(self, node):
         source_list = node.source_list.accept(self)
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
@@ -225,7 +220,7 @@ class Visitor():
             new_list.append((Expression(left_operand, operation, right_operand)).accept(self))
         return new_list
 
-    def visit_Get(self, node):
+    def visit_get(self, node):
         source_list = node.source_list.accept(self)
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
@@ -234,13 +229,13 @@ class Visitor():
             position_to_get = self.get_variable_value(position_to_get)
         return source_list[position_to_get]
 
-    def visit_Length(self, node):
+    def visit_length(self, node):
         source_list = node.source_list.accept(self)
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
         return len(source_list)
 
-    def visit_Delete(self, node):
+    def visit_delete(self, node):
         source_list = node.source_list.accept(self)
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
@@ -252,25 +247,27 @@ class Visitor():
             source_list.pop(position_to_delete)
         return source_list
 
-    def visit_Number(self, node):
+    @staticmethod
+    def visit_number(node):
         return node.value
 
-    def visit_PrintFunction(self, node):
+    def visit_print_function(self, node):
         result = node.identifier.accept(self)
         if isinstance(result, str):
             result = self.get_variable_value(result)
         print(result)
 
-    def visit_Value(self, node):
+    @staticmethod
+    def visit_value(node):
         return node.value
 
-    def visit_Variable(self, node):
+    def visit_variable(self, node):
         variable_name = node.identifier.accept(self)
         variable_type = node.type
 
         self.create_variable(variable_name, variable_type)
 
-        if node.value != None:
+        if node.value is not None:
             variable_value = node.value.accept(self)
             self.save_variable(variable_name, variable_value)
 

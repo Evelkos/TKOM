@@ -1,12 +1,7 @@
 # interpreter.py
 
-from .lexer import Lexer
-from .source import Source
-from .parser import Parser
-from .visitor import Visitor
 
-
-class Interpreter():
+class Interpreter:
     def __init__(self, parser, visitor):
         self.parser = parser
         self.visitor = visitor
@@ -16,5 +11,5 @@ class Interpreter():
         self.visitor.set_functions_def(functions)
         
         for function in functions:
-            if (function.identifier.name == "main"):
-                print(f"Ostateczny rezultat: {function.accept(self.visitor)}")
+            if function.identifier.name == "main":
+                return function.accept(self.visitor)

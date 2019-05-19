@@ -2,11 +2,13 @@
 
 from .node import Node
 
+
 class List(Node):
     def __init__(self, elements, line=None, column=None):
-        self.line = line
-        self.column = column
+        super().__init__(line, column)
         self.elements = elements
+        # self.line = line
+        # self.column = column
 
     def __eq__(self, other):
         if isinstance(other, List) and self.length() == other.length():
@@ -24,11 +26,11 @@ class List(Node):
         return buff
 
     def accept(self, visitor):
-        return visitor.visit_List(self)
+        return visitor.visit_list(self)
 
     def get(self, idx):
         if idx < len(self.elements):
-            return elements[idx]
+            return self.elements[idx]
         return None
 
     def length(self):

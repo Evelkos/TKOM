@@ -1,13 +1,18 @@
 # main.py
 
-import sys
 from src.lexer import Lexer
-from src.token import Type
 from src.source import Source
 from src.parser import Parser
 from src.visitor import Visitor
 from src.interpreter import Interpreter
-from src.exceptions import InvalidSyntax, UndefinedOperation, InvalidOperation, Undeclared, InvalidValue
+from src.exceptions import (
+    InvalidSyntax,
+    UndefinedOperation,
+    InvalidOperation,
+    Undeclared,
+    InvalidValue
+)
+
 
 if __name__ == "__main__":
     source = Source()
@@ -16,7 +21,8 @@ if __name__ == "__main__":
     visitor = Visitor()
     interpreter = Interpreter(parser, visitor)
     try:
-        interpreter.run()
+        result = interpreter.run()
+        print(f"Ostateczny wynik = {result}")
     except InvalidSyntax as e:
         print(
             f"Error: On position: {e.position}. "

@@ -10,14 +10,11 @@ class Source:
         self.position = 0
         self.character = self.get_next_char()
 
-
     def get_char(self):
         return self.character
 
-
     def get_position(self):
         return self.line_number, self.position
-
 
     def get_next_char(self):
         self.character = sys.stdin.read(1)

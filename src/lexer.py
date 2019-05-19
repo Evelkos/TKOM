@@ -1,6 +1,5 @@
 # lexer.py
 
-from .source import Source
 from .token import Token, Type, Symbol
 
 
@@ -8,7 +7,6 @@ class Lexer:
     def __init__(self, source):
         self.source = source
         self.token = Token()
-
 
     def build_next_token(self):
         self.ignore_white_spaces()
@@ -27,15 +25,12 @@ class Lexer:
             self.source.get_next_char()
             return
 
-
     def get_token(self):
         return self.token
-
 
     def ignore_white_spaces(self):
         while self.source.get_char() == " " or self.source.get_char() == "\n":
             self.source.get_next_char()
-
 
     def read_identifier(self):
         character = self.source.get_char()
@@ -46,14 +41,13 @@ class Lexer:
                 character = self.source.get_next_char()
         return buff
 
-
     def read_number(self):
         character = self.source.get_char()
         buff = ""
 
         if character == '0':
             buff += character
-            character = self.source.get_next_char()
+            self.source.get_next_char()
 
         elif character.isdigit() and character != '0':
             while character.isdigit():
@@ -61,14 +55,12 @@ class Lexer:
                 character = self.source.get_next_char()
         return buff
 
-
     def try_eof(self):
         character = self.source.get_char()
         if character is "":
             self.token = Token(Type.EOF, None)
             return True
         return False
-
 
     def try_digit(self):
         token_value = self.read_number()
@@ -93,7 +85,6 @@ class Lexer:
                 return True
         return False
 
-
     def try_identifier(self):
         word = self.read_identifier()
         if word in Symbol.key_words:
@@ -104,7 +95,6 @@ class Lexer:
             self.token = Token(Type.IDENTIFIER, word)
             return True
         return False
-
 
     def try_single_character(self):
         character = self.source.get_char()
