@@ -7,7 +7,6 @@ from TKOM.src.exceptions import InvalidSyntax
 from TKOM.src.ast.function import Function
 from TKOM.src.ast.identifier import Identifier
 from TKOM.src.ast.variable import Variable
-from TKOM.src.ast.variable_type import VariableType
 from TKOM.src.ast.node import Node
 from TKOM.src.ast.bool import Bool
 from TKOM.src.ast.number import Number
@@ -16,7 +15,7 @@ from TKOM.src.ast.function_body import FunctionBody
 from TKOM.src.ast.function_call import FunctionCall
 from TKOM.src.ast.print_function import PrintFunction
 from TKOM.src.ast.expression import Expression
-from TKOM.src.ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
+from TKOM.src.ast.list_operation import Filter, FilterCondition, Each, Get, Length, Delete
 import io
 import pytest
 import sys

@@ -6,7 +6,6 @@ from .exceptions import InvalidSyntax
 from .ast.function import Function
 from .ast.identifier import Identifier
 from .ast.variable import Variable
-from .ast.variable_type import VariableType
 from .ast.node import Node
 from .ast.bool import Bool
 from .ast.number import Number
@@ -15,7 +14,7 @@ from .ast.function_body import FunctionBody
 from .ast.function_call import FunctionCall
 from .ast.print_function import PrintFunction
 from .ast.expression import Expression
-from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
+from .ast.list_operation import Filter, FilterCondition, Each, Get, Length, Delete
 from .env.deep_chain_map import DeepChainMap
 
 
@@ -29,13 +28,9 @@ class Visitor():
     def calculate_bool_expression(self, left_operand, right_operand, operation):
         if isinstance(left_operand, bool) and isinstance(right_operand, bool):
             if operation == "+":
-                if left_operand or right_operand:
-                    return True
-                return False
+                return left_operand or right_operand
             elif operation == "*":
-                if left_operand and right_operand:
-                    return True
-                return False
+                return left_operand and right_operand
             else:
                 # TODO - dorobic obsluge bledow (nieznany operator)
                 print("Nie zdefiniowano innych operacji dla bool")
@@ -185,9 +180,6 @@ class Visitor():
             elements.append(element.accept(self))
         return elements
 
-    def visit_ListOperation(self, node):
-        return 0
-
     def visit_Filter(self, node):
         return 0
 
@@ -198,13 +190,31 @@ class Visitor():
         return 0
 
     def visit_Get(self, node):
-        return 0
+        source_list = node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+        position_to_get = node.idx.accept(self)
+        if isinstance(position_to_get, str):
+            position_to_get = self.get_variable_value(position_to_get)
+        return source_list[position_to_get]
 
     def visit_Length(self, node):
-        return 0
+        source_list = node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+        return len(source_list)
 
     def visit_Delete(self, node):
-        return 0
+        source_list = node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+        position_to_delete = node.idx.accept(self)
+        if isinstance(position_to_delete, str):
+            position_to_delete = self.get_variable_value(position_to_delete)
+
+        if position_to_delete in range(0, len(source_list)):
+            source_list.pop(position_to_delete)
+        return source_list
 
     def visit_Number(self, node):
         return node.value

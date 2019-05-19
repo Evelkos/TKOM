@@ -11,10 +11,10 @@ class ListOperation(Node):
         self.source_list = source_list
 
     def __repr__(self):
-        return f"[ListOperation: {self.source_list}]"
+        pass
 
     def accept(self, visitor):
-        return visitor.visit_ListOperation(self)
+        pass
         
 
 class Filter(ListOperation):
