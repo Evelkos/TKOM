@@ -7,7 +7,6 @@ from .exceptions import InvalidSyntax
 from .ast.function import Function
 from .ast.identifier import Identifier
 from .ast.variable import Variable
-from .ast.variable_type import VariableType
 from .ast.node import Node
 from .ast.bool import Bool
 from .ast.number import Number
@@ -15,7 +14,6 @@ from .ast.list import List
 from .ast.function_body import FunctionBody
 from .ast.function_call import FunctionCall
 from .ast.print_function import PrintFunction
-from .ast.declaration import Declaration
 from .ast.expression import Expression
 from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 

@@ -15,7 +15,6 @@ from TKOM.src.ast.list import List
 from TKOM.src.ast.function_body import FunctionBody
 from TKOM.src.ast.function_call import FunctionCall
 from TKOM.src.ast.print_function import PrintFunction
-from TKOM.src.ast.declaration import Declaration
 from TKOM.src.ast.expression import Expression
 from TKOM.src.ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 import io
@@ -49,7 +48,7 @@ def test_parse():
     parser = Parser(source, lexer)
 
     arguments_1 = [Variable("bool", Identifier("a")), Variable("number", Identifier("b"))]
-    function_body_1 = FunctionBody(List([Identifier("abc"), Number(123), List([Number(345), Identifier("xyz")])]), None)
+    function_body_1 = FunctionBody(List([Identifier("abc"), Number(123), List([Number(345), Identifier("xyz")])]), [])
     fun_1 = Function(Identifier("name1"), arguments_1, function_body_1)
 
     arguments_2 = [Variable("list", Identifier("abc"))]
@@ -307,7 +306,7 @@ def test_parse_factor_with_expression():
     assert parser.parse_factor() == Number(1)
 
 
-def test_parse_factor_with_expression_within_():
+def test_parse_factor_with_expression_within_brackets():
     sys.stdin = io.StringIO("(1 + 2)")
     source = Source()
     lexer = Lexer(source)
@@ -322,7 +321,7 @@ def test_parse_function_with_empty_body_and_without_arguments():
     lexer = Lexer(source)
     parser = Parser(source, lexer)
 
-    function = Function(Identifier("fun"), None, None)
+    function = Function(Identifier("fun"), [], None)
     assert parser.parse_function() == function
 
 
@@ -351,7 +350,7 @@ def test_parse_function_without_arguments():
     parser = Parser(source, lexer)
 
     line_1 = Expression(Identifier("a"), "=", Expression(Number(1), "+", Expression(Number(2), "*", Number(3))))
-    function = Function(Identifier("fun"), None, FunctionBody(Identifier("a"), [line_1]))
+    function = Function(Identifier("fun"), [], FunctionBody(Identifier("a"), [line_1]))
     assert parser.parse_function() == function
 
 
@@ -393,7 +392,7 @@ def test_parse_function_body_with_empty_content():
     lexer = Lexer(source)
     parser = Parser(source, lexer)
 
-    assert parser.parse_function_body() == FunctionBody(Identifier("abc"), None)
+    assert parser.parse_function_body() == FunctionBody(Identifier("abc"), [])
 
 
 def test_parse_function_body_with_empty_return():

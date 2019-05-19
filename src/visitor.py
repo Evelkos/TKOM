@@ -14,7 +14,6 @@ from .ast.list import List
 from .ast.function_body import FunctionBody
 from .ast.function_call import FunctionCall
 from .ast.print_function import PrintFunction
-from .ast.declaration import Declaration
 from .ast.expression import Expression
 from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
 from .env.deep_chain_map import DeepChainMap
@@ -112,10 +111,6 @@ class Visitor():
             return True
         elif node.value == "false":
             return False
-
-    # z tego co widze, to to nie jest potrzebne, bo deklaracje zalatwia samo variable
-    def visit_Declaration(self, node):
-        return 0
 
     def visit_Expression(self, node):
         left_operand = node.left_operand.accept(self)
@@ -232,9 +227,6 @@ class Visitor():
         if node.value != None:
             variable_value = node.value.accept(self)
             self.save_variable(variable_name, variable_value)
-
-    def visit_VariableType(self, node):
-        return 0
 
     def set_functions_def(self, functions_def):
         self.functions_def = functions_def
