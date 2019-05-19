@@ -20,3 +20,6 @@ class Variable(Node):
 
     def accept(self, visitor):
         return visitor.visit_Variable(self)
+
+    def set_value(self, value):
+        self.value = value

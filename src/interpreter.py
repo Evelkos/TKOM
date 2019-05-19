@@ -13,6 +13,8 @@ class Interpreter():
 
     def run(self):
         functions = self.parser.parse()
+        self.visitor.set_functions_def(functions)
+        
         for function in functions:
             if (function.identifier.name == "main"):
                 print(function)
