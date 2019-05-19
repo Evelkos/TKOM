@@ -16,6 +16,7 @@ from .ast.function_call import FunctionCall
 from .ast.print_function import PrintFunction
 from .ast.expression import Expression
 from .ast.list_operation import ListOperation, Filter, FilterCondition, Each, Get, Length, Delete
+from enum import Enum
 
 
 variable_types = [Type.LIST_TYPE, Type.NUMBER_TYPE, Type.BOOL_TYPE]
@@ -42,7 +43,7 @@ class Parser():
 
 
     def require_and_consume(self, token_type):
-        token = self.require_token(token_type)
+        self.require_token(token_type)
         return self.consume()
 
 
@@ -52,25 +53,27 @@ class Parser():
                 token = self.current_token
                 self.consume()
                 return token
-        raise InvalidSyntax(
-            f"On position {self.source.get_position()} "
-            f"expected '{type_list}', "
-            f"got {self.current_token.get_type()}: "
-            f"{self.current_token.get_value()}"
-        )
 
+        required_types = []
+        for single_type in type_list:
+            required_types.append(single_type.name)
+        raise InvalidSyntax(
+            self.source.get_position(),
+            required_types,
+            self.current_token.get_type().name,
+            self.current_token.get_value()
+        )
 
     def require_token(self, token_type):
         if self.current_token.get_type() == token_type:
             return self.current_token
         else:
             raise InvalidSyntax(
-                f"On position {self.source.get_position()} "
-                f"expected '{token_type}', "
-                f"got {self.current_token.get_type()}: "
-                f"{self.current_token.get_value()}"
+                self.source.get_position(),
+                token_type.name,
+                self.current_token.get_type().name,
+                self.current_token.get_value()
             )
-
 
     def parse(self):
         functions = []
