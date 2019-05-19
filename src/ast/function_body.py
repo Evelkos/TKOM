@@ -12,7 +12,7 @@ class FunctionBody(Node):
         self.content = content
 
     def __eq__(self, other):
-        return self.return_statement == other.return_statement and self.content == other.content
+        return isinstance(other, FunctionBody) and self.return_statement == other.return_statement and self.content == other.content
 
     def __repr__(self):
         return f"[FunctionBody: {self.return_statement}, {self.content}]"

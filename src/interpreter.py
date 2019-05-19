@@ -17,5 +17,4 @@ class Interpreter():
         
         for function in functions:
             if (function.identifier.name == "main"):
-                print(function)
-                function.accept(self.visitor)
+                print(f"Ostateczny rezultat: {function.accept(self.visitor)}")

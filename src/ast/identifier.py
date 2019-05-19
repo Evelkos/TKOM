@@ -11,7 +11,7 @@ class Identifier(Node):
         self.name = name
 
     def __eq__(self, other):
-        return self.name == other.name
+        return isinstance(other, Identifier) and self.name == other.name
 
     def __repr__(self):
         return f"[Identifier: {self.name}]"

@@ -10,7 +10,7 @@ class Bool(Value):
         super().__init__(value)
 
     def __eq__(self, other):
-        return self.value == other.value
+        return isinstance(other, Bool) and self.value == other.value
 
     def __repr__(self):
         return f"[BOOL: {self.value}]"

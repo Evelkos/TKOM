@@ -13,7 +13,7 @@ class Function(Node):
         self.body = body
 
     def __eq__(self, other):
-        return self.identifier == other.identifier and self.arguments == other.arguments and self.body == other.body
+        return isinstance(other, Function) and self.identifier == other.identifier and self.arguments == other.arguments and self.body == other.body
 
     def __repr__(self):
         return f"[Function: {self.identifier}, {self.arguments}, {self.body}]"

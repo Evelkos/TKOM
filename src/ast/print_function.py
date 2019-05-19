@@ -9,7 +9,7 @@ class PrintFunction(Node):
         self.identifier = identifier
 
     def __eq__(self, other):
-        return self.identifier == other.identifier
+        return isinstance(other, PrintFunction) and self.identifier == other.identifier
 
     def __repr__(self):
         return f"[PRINT: {self.identifier}]"

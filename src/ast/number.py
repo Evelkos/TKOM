@@ -10,7 +10,7 @@ class Number(Value):
         self.value = int(value)
 
     def __eq__(self, other):
-        return self.value == other.value
+        return isinstance(other, Number) and self.value == other.value
 
     def __repr__(self):
         return f"[NUMBER: {self.value}]"

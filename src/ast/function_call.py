@@ -12,7 +12,7 @@ class FunctionCall(Node):
         self.arguments = arguments
 
     def __eq__(self, other):
-        return self.identifier == other.identifier and self.arguments == other.arguments
+        return isinstance(other, FunctionCall) and self.identifier == other.identifier and self.arguments == other.arguments
 
     def __repr__(self):
         return f"[FunctionCall: {self.identifier}, {self.arguments}]"

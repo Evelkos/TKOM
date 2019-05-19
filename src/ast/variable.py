@@ -13,7 +13,7 @@ class Variable(Node):
         self.value = value
 
     def __eq__(self, other):
-        return self.type == other.type and self.identifier == other.identifier and self.value == other.value
+        return isinstance(other, Variable) and self.type == other.type and self.identifier == other.identifier and self.value == other.value
 
     def __repr__(self):
         return f"[Variable: {self.type}, {self.identifier}, {self.value}]"

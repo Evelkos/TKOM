@@ -92,7 +92,7 @@ class Parser():
                 arguments.append(Variable(variable_type, variable_name, None, None))
                 if self.current_token.get_type() == Type.COMMA:
                     self.consume()
-            return arguments
+        return arguments
 
 
     def parse_bool(self):
@@ -205,6 +205,7 @@ class Parser():
         end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
         if self.current_token.get_type() not in end_of_content_token_types:
             return self.parse_content()
+        return []
 
     def parse_function_body_return(self):
         if self.current_token.get_type() == Type.RETURN:

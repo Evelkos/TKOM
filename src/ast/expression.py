@@ -11,7 +11,7 @@ class Expression(Node):
         self.right_operand = right_operand
 
     def __eq__(self, other):
-        return self.left_operand == other.left_operand and self.operation == other.operation and self.right_operand == other.right_operand
+        return isinstance(other, Expression) and self.left_operand == other.left_operand and self.operation == other.operation and self.right_operand == other.right_operand
 
     def __repr__(self):
         return f"[Expression: {self.left_operand}, {self.operation}, {self.right_operand}]"

@@ -9,7 +9,7 @@ class List(Node):
         self.elements = elements
 
     def __eq__(self, other):
-        if self.length() == other.length():
+        if isinstance(other, List) and self.length() == other.length():
             for idx in range(0, len(self.elements) - 1):
                 if self.elements[idx] != other.elements[idx]:
                     return False
