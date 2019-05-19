@@ -62,6 +62,14 @@ class Visitor():
                 # TODO - dorobic obsluge bledow (nieznany operator)
                 print("Nie zdefiniowano innych operacji dla number")
 
+    def convert_to_variable_object(self, value):
+        if isinstance(value, int):
+            return Number(value)
+        elif isinstance(value, bool):
+            return Bool(value)
+        elif isinstance(value, list):
+            return List(value)
+
     def create_variable(self, variable_name, variable_type):
         self.map[-1][variable_name] = {
             "type": variable_type,
@@ -187,7 +195,17 @@ class Visitor():
         return 0
 
     def visit_Each(self, node):
-        return 0
+        source_list = node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+
+        new_list = []
+        for list_element in source_list:
+            left_operand = self.convert_to_variable_object(list_element)
+            operation = node.operator
+            right_operand = node.expression
+            new_list.append((Expression(left_operand, operation, right_operand)).accept(self))
+        return new_list
 
     def visit_Get(self, node):
         source_list = node.source_list.accept(self)
