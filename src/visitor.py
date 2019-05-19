@@ -69,6 +69,10 @@ class Visitor:
     def get_map(self):
         return self.map
 
+    def get_variable_value(self, variable_name):
+        if self.is_variable_in_map(variable_name):
+            return self.map[-1][variable_name]["value"]
+
     def find_function_def(self, identifier, arguments_num):
         for function_def in self.functions_def:
             if function_def.identifier == identifier and len(function_def.arguments) == arguments_num:
@@ -76,6 +80,7 @@ class Visitor:
 
     def is_variable_in_map(self, variable_name):
         return variable_name in self.map[-1]
+
 
     @staticmethod
     def is_value_type_correct(variable_value, variable_type):
@@ -86,10 +91,6 @@ class Visitor:
         }
         return variable_type in types_conversion and types_conversion[variable_type] == type(variable_value)
 
-    def get_variable_value(self, variable_name):
-        if self.is_variable_in_map(variable_name):
-            return self.map[-1][variable_name]["value"]
-
     def save_variable(self, variable_name, variable_value):
         if self.is_variable_in_map(variable_name):
             variable_type = self.map[-1][variable_name]["type"]
@@ -98,6 +99,17 @@ class Visitor:
                 return True
             raise InvalidValue(variable_type, type(variable_value).__name__)
         raise Undeclared("variable", variable_name)
+
+    def try_variable_assign(self, operation, left_operand, right_operand):
+        if operation == "=":
+            if isinstance(left_operand, str):
+                right_operand_value = right_operand
+                if isinstance(right_operand, str):
+                    right_operand_value = self.get_variable_value(right_operand)
+                self.save_variable(left_operand, right_operand_value)
+                return
+            else:
+                raise InvalidOperation("r-value", "=", "r-value")
 
     @staticmethod
     def visit_bool(node):
@@ -110,17 +122,8 @@ class Visitor:
         left_operand = node.left_operand.accept(self)
         operation = node.operation
         right_operand = node.right_operand.accept(self)
-
-        # Przypisanie wartosci do zmiennej - przeniesc gdzies indziej
-        if operation == "=":
-            if isinstance(left_operand, str):
-                right_operand_value = right_operand
-                if isinstance(right_operand, str):
-                    right_operand_value = self.get_variable_value(right_operand)
-                self.save_variable(left_operand, right_operand_value)
-                return
-            else:
-                raise InvalidOperation("r-value", "=", "r-value")
+        
+        self.try_variable_assign(operation, left_operand, right_operand)
 
         if isinstance(left_operand, str):
             left_operand = self.get_variable_value(left_operand)
@@ -153,10 +156,8 @@ class Visitor:
             arguments_value = []
             for argument in node.arguments:
                 arguments_value.append(argument.accept(self))
-
             for argument in function_def.arguments:
                 argument.accept(self)
-
             for i in range(0, len(arguments_value)):
                 variable_name = function_def.arguments[i].identifier.accept(self)
                 self.save_variable(variable_name, arguments_value[i])
