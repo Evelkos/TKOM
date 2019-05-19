@@ -2,7 +2,7 @@
 from .source import Source
 from .token import Token, Type, Symbol
 from .lexer import Lexer
-from .exceptions import InvalidSyntax
+from .exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue
 from .ast.function import Function
 from .ast.identifier import Identifier
 from .ast.variable import Variable
@@ -33,8 +33,7 @@ class Visitor():
             elif operation == "*":
                 return left_operand and right_operand
             else:
-                # TODO - dorobic obsluge bledow (nieznany operator)
-                print("Nie zdefiniowano innych operacji dla bool")
+                raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
     def calculate_list_expression(self, left_operand, right_operand, operation):
         if isinstance(left_operand, list) or (isinstance(right_operand, list)):
@@ -46,8 +45,7 @@ class Visitor():
             if operation == "+":
                 return left_operand + right_operand
             else:
-                # TODO - dorobic obsluge bledow (nieznany operator)
-                print("Nie zdefiniowano innych operacji dla list")
+                raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
     def calculate_numeric_expression(self, left_operand, right_operand, operation):
         if isinstance(left_operand, int) and isinstance(right_operand, int):
@@ -60,8 +58,7 @@ class Visitor():
             elif operation == "/":
                 return (int)(left_operand / right_operand)
             else:
-                # TODO - dorobic obsluge bledow (nieznany operator)
-                print("Nie zdefiniowano innych operacji dla number")
+                raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
 
     def convert_to_variable_object(self, value):
         if isinstance(value, int):
@@ -101,14 +98,13 @@ class Visitor():
             return self.map[-1][variable_name]["value"]
 
     def save_variable(self, variable_name, variable_value):
-        variable_type = self.map[-1][variable_name]["type"]
         if self.is_variable_in_map(variable_name):
+            variable_type = self.map[-1][variable_name]["type"]
             if self.is_value_type_correct(variable_value, variable_type):
                 self.map[-1][variable_name]["value"] = variable_value
                 return True
-        else:
-            print(f"nie ma zmiennej {variable_name} w mapie")
-            return False
+            raise InvalidValue(variable_type, type(variable_value).__name__)
+        raise Undeclared("variable", variable_name)
 
     def visit_Bool(self, node):
         if node.value == "true":
@@ -130,7 +126,7 @@ class Visitor():
                 self.save_variable(left_operand, right_operand_value)
                 return
             else:
-                raise Exception("TODO - przypisanie do R-wartosci!!! Wywalic blad")
+                raise InvalidOperation("r-value", "=" ,"r-value")
 
         if isinstance(left_operand, str):
             left_operand = self.get_variable_value(left_operand)
@@ -174,11 +170,8 @@ class Visitor():
 
             result = function_def.accept(self)
             self.map.pop()
-            return result
-
-        else:
-            print(f"TODO wyjatek - nie znaleziono definicji funkcji {node.identifier.accept(self)}") # TODO - wyjatek
-        return 0
+            return result    
+        raise Undeclared("function", node.identifier.accept(self))
 
     def visit_Identifier(self, node):
         return node.name
@@ -210,15 +203,10 @@ class Visitor():
         if isinstance(source_list, str):
             source_list = self.get_variable_value(source_list)
 
-        print(f"Source list = {source_list}")
-
         result_list = []
-
         for element in source_list:
             if self.is_element_meet_the_conditions(element, node.conditions):
                 result_list.append(element)
-
-        print(f"Result list = {result_list}")
         return result_list
 
     def visit_FilterCondition(self, node):
@@ -288,4 +276,3 @@ class Visitor():
 
     def set_functions_def(self, functions_def):
         self.functions_def = functions_def
-        print(f"Oto moje funkcje w visitorze: {self.functions_def}")
