@@ -336,14 +336,7 @@ class Parser:
 
     def parse_return(self):
         self.require_and_consume(Type.RETURN)
-        if self.current_token.get_type() == Type.BOOL:
-            return self.parse_bool()
-        elif self.current_token.get_type() == Type.NUMBER:
-            return self.parse_number()
-        elif self.current_token.get_type() == Type.IDENTIFIER:
-            return self.parse_identifier()
-        else:
-            return self.parse_list()
+        return self.parse_expression()
 
     def parse_single_condition(self):
         if self.current_token.get_value() == "x":

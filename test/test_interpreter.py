@@ -97,3 +97,7 @@ def test_interpreter_run_with_bool_variable_reassigned_with_true():
 def test_interpreter_run_with_list_variable_reassigned():
     interpreter = create_interpreter("function main() { list a = [5, 7, 2]; a = [1]; a = [93, 44]; return a; }")
     assert interpreter.run() == [93, 44]
+
+def test_interpreter_run_with_addition_expression():
+    interpreter = create_interpreter("function main() { return 123 + 321; }")
+    assert interpreter.run() == 444
