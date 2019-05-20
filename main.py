@@ -1,5 +1,5 @@
 # main.py
-
+import sys
 from src.lexer import Lexer
 from src.source import Source
 from src.parser import Parser
@@ -15,7 +15,7 @@ from src.exceptions import (
 
 
 if __name__ == "__main__":
-    source = Source()
+    source = Source(sys.stdin)
     lexer = Lexer(source)
     parser = Parser(source, lexer)
     visitor = Visitor()
