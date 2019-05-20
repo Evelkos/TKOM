@@ -5,11 +5,11 @@ from TKOM.src.lexer import Lexer
 from TKOM.src.source import Source
 import io
 
+def create_lexer(string):
+    return Lexer(Source(io.StringIO(string)))
 
 def test_lexer_with_single_identifier():
-    sys.stdin = io.StringIO("identifier")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("identifier")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "identifier"
@@ -17,9 +17,7 @@ def test_lexer_with_single_identifier():
 
 
 def test_lexer_with_multiple_identifiers():
-    sys.stdin = io.StringIO("identifier1 identifier2")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("identifier1 identifier2")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "identifier1"
@@ -33,9 +31,7 @@ def test_lexer_with_multiple_identifiers():
 
 
 def test_lexer_with_single_number():
-    sys.stdin = io.StringIO("123")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("123")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "123"
@@ -46,9 +42,7 @@ def test_lexer_with_single_number():
 
 
 def test_lexer_with_multiple_numbers():
-    sys.stdin = io.StringIO("123 456")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("123 456")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "123"
@@ -62,9 +56,7 @@ def test_lexer_with_multiple_numbers():
 
 
 def test_lexer_with_key_word_list():
-    sys.stdin = io.StringIO("list")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("list")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "list"
@@ -72,9 +64,7 @@ def test_lexer_with_key_word_list():
 
 
 def test_lexer_with_key_word_number():
-    sys.stdin = io.StringIO("number")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("number")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "number"
@@ -82,9 +72,7 @@ def test_lexer_with_key_word_number():
 
 
 def test_lexer_with_key_word_bool():
-    sys.stdin = io.StringIO("bool")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("bool")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "bool"
@@ -92,9 +80,7 @@ def test_lexer_with_key_word_bool():
 
 
 def test_lexer_with_key_word_return():
-    sys.stdin = io.StringIO("return")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("return")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "return"
@@ -102,9 +88,7 @@ def test_lexer_with_key_word_return():
 
 
 def test_lexer_with_key_word_filter():
-    sys.stdin = io.StringIO("filter")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("filter")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "filter"
@@ -112,9 +96,7 @@ def test_lexer_with_key_word_filter():
 
 
 def test_lexer_with_key_word_each():
-    sys.stdin = io.StringIO("each")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("each")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "each"
@@ -122,9 +104,7 @@ def test_lexer_with_key_word_each():
 
 
 def test_lexer_with_key_word_get():
-    sys.stdin = io.StringIO("get")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("get")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "get"
@@ -132,9 +112,7 @@ def test_lexer_with_key_word_get():
 
 
 def test_lexer_with_key_word_length():
-    sys.stdin = io.StringIO("length")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("length")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "length"
@@ -142,9 +120,7 @@ def test_lexer_with_key_word_length():
 
 
 def test_lexer_with_key_word_delete():
-    sys.stdin = io.StringIO("delete")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("delete")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "delete"
@@ -152,9 +128,7 @@ def test_lexer_with_key_word_delete():
 
 
 def test_lexer_with_key_word_true():
-    sys.stdin = io.StringIO("true")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("true")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "true"
@@ -162,9 +136,7 @@ def test_lexer_with_key_word_true():
 
 
 def test_lexer_with_key_word_false():
-    sys.stdin = io.StringIO("false")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("false")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "false"
@@ -172,9 +144,7 @@ def test_lexer_with_key_word_false():
 
 
 def test_lexer_with_key_word_eof():
-    sys.stdin = io.StringIO("")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == None
@@ -182,9 +152,7 @@ def test_lexer_with_key_word_eof():
 
 
 def test_lexer_with_key_word_function():
-    sys.stdin = io.StringIO("function")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("function")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "function"
@@ -192,9 +160,7 @@ def test_lexer_with_key_word_function():
 
 
 def test_lexer_with_key_word_print():
-    sys.stdin = io.StringIO("print")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("print")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "print"
@@ -202,9 +168,7 @@ def test_lexer_with_key_word_print():
 
 
 def test_lexer_with_special_character_OP_SQUARE_BRACKET():
-    sys.stdin = io.StringIO("[")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("[")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "["
@@ -212,9 +176,7 @@ def test_lexer_with_special_character_OP_SQUARE_BRACKET():
 
 
 def test_lexer_with_special_character_CL_SQUARE_BRACKET():
-    sys.stdin = io.StringIO("]")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("]")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "]"
@@ -222,9 +184,7 @@ def test_lexer_with_special_character_CL_SQUARE_BRACKET():
 
 
 def test_lexer_with_special_character_OP_BRACKET():
-    sys.stdin = io.StringIO("(")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("(")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "("
@@ -232,9 +192,7 @@ def test_lexer_with_special_character_OP_BRACKET():
 
 
 def test_lexer_with_special_character_CL_BRACKET():
-    sys.stdin = io.StringIO(")")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(")")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == ")"
@@ -242,9 +200,7 @@ def test_lexer_with_special_character_CL_BRACKET():
 
 
 def test_lexer_with_special_character_OP_CURLY_BRACKET():
-    sys.stdin = io.StringIO("{")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("{")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "{"
@@ -252,9 +208,7 @@ def test_lexer_with_special_character_OP_CURLY_BRACKET():
 
 
 def test_lexer_with_special_character_CL_CURLY_BRACKET():
-    sys.stdin = io.StringIO("}")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("}")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "}"
@@ -262,9 +216,7 @@ def test_lexer_with_special_character_CL_CURLY_BRACKET():
 
 
 def test_lexer_with_special_character_STAR():
-    sys.stdin = io.StringIO("*")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("*")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "*"
@@ -272,9 +224,7 @@ def test_lexer_with_special_character_STAR():
 
 
 def test_lexer_with_special_character_DIVIDE():
-    sys.stdin = io.StringIO("/")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("/")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "/"
@@ -282,9 +232,7 @@ def test_lexer_with_special_character_DIVIDE():
 
 
 def test_lexer_with_special_character_DIVIDE():
-    sys.stdin = io.StringIO("+")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("+")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "+"
@@ -292,9 +240,7 @@ def test_lexer_with_special_character_DIVIDE():
 
 
 def test_lexer_with_special_character_MINUS():
-    sys.stdin = io.StringIO("-")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("-")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "-"
@@ -302,9 +248,7 @@ def test_lexer_with_special_character_MINUS():
 
 
 def test_lexer_with_special_character_SEMICOLON():
-    sys.stdin = io.StringIO(";")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(";")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == ";"
@@ -312,9 +256,7 @@ def test_lexer_with_special_character_SEMICOLON():
 
 
 def test_lexer_with_special_character_DOT():
-    sys.stdin = io.StringIO(".")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(".")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "."
@@ -322,9 +264,7 @@ def test_lexer_with_special_character_DOT():
 
 
 def test_lexer_with_special_character_COMMA():
-    sys.stdin = io.StringIO(",")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(",")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == ","
@@ -332,9 +272,7 @@ def test_lexer_with_special_character_COMMA():
 
 
 def test_lexer_with_special_character_NOT():
-    sys.stdin = io.StringIO("!")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("!")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "!"
@@ -342,9 +280,7 @@ def test_lexer_with_special_character_NOT():
 
 
 def test_lexer_with_special_character_LESS_THAN():
-    sys.stdin = io.StringIO("<")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("<")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "<"
@@ -352,9 +288,7 @@ def test_lexer_with_special_character_LESS_THAN():
 
 
 def test_lexer_with_special_character_GREATER_THAN():
-    sys.stdin = io.StringIO(">")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(">")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == ">"
@@ -362,9 +296,7 @@ def test_lexer_with_special_character_GREATER_THAN():
 
 
 def test_lexer_with_special_character_ASSIGN():
-    sys.stdin = io.StringIO("=")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("=")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "="
@@ -372,9 +304,7 @@ def test_lexer_with_special_character_ASSIGN():
 
 
 def test_lexer_with_special_character_AND():
-    sys.stdin = io.StringIO("&")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("&")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "&"
@@ -382,9 +312,7 @@ def test_lexer_with_special_character_AND():
 
 
 def test_lexer_with_special_character_OR():
-    sys.stdin = io.StringIO("|")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("|")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "|"
@@ -392,9 +320,7 @@ def test_lexer_with_special_character_OR():
 
 
 def test_lexer_with_special_character_EOF():
-    sys.stdin = io.StringIO("")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == None
@@ -402,9 +328,7 @@ def test_lexer_with_special_character_EOF():
 
 
 def test_lexer_with_double_operator_LESS_OR_EQUAL_TO():
-    sys.stdin = io.StringIO("<=")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("<=")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "<="
@@ -412,9 +336,7 @@ def test_lexer_with_double_operator_LESS_OR_EQUAL_TO():
 
 
 def test_lexer_with_double_operator_GREATER_OR_EQUAL_TO():
-    sys.stdin = io.StringIO(">=")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer(">=")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == ">="
@@ -422,9 +344,7 @@ def test_lexer_with_double_operator_GREATER_OR_EQUAL_TO():
 
 
 def test_lexer_with_double_operator_EQUAL_TO():
-    sys.stdin = io.StringIO("==")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("==")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "=="
@@ -432,9 +352,7 @@ def test_lexer_with_double_operator_EQUAL_TO():
 
 
 def test_lexer_with_double_operator_NOT_EQUAL_TO():
-    sys.stdin = io.StringIO("!=")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("!=")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "!="
@@ -442,9 +360,7 @@ def test_lexer_with_double_operator_NOT_EQUAL_TO():
 
 
 def test_lexer_with_single_comment():
-    sys.stdin = io.StringIO("abc # ghi\njkl")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("abc # ghi\njkl")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "abc"
@@ -458,9 +374,7 @@ def test_lexer_with_single_comment():
 
 
 def test_lexer_with_the_comment_at_the_end_of_the_file():
-    sys.stdin = io.StringIO("abc #")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("abc #")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "abc"
@@ -471,19 +385,7 @@ def test_lexer_with_the_comment_at_the_end_of_the_file():
 
 
 def test_lexer_with_just_a_comment():
-    sys.stdin = io.StringIO("#")
-    source = Source()
-    lexer = Lexer(source)
-
-    lexer.build_next_token()
-    assert lexer.get_token().get_value() == None
-    assert lexer.get_token().get_type() == Type.EOF
-
-
-def test_lexer_with_empty_input():
-    sys.stdin = io.StringIO("")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("#")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == None
@@ -491,9 +393,7 @@ def test_lexer_with_empty_input():
 
 
 def test_lexer_with_complex_input():
-    sys.stdin = io.StringIO("abc =123| list& }  abc!")
-    source = Source()
-    lexer = Lexer(source)
+    lexer = create_lexer("abc =123| list& }  abc!")
 
     lexer.build_next_token()
     assert lexer.get_token().get_value() == "abc"
