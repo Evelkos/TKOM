@@ -138,7 +138,8 @@ class Visitor:
         return return_value
 
     def visit_function(self, node):
-        return node.body.accept(self)
+        if node.body is not None:
+            return node.body.accept(self)
 
     def visit_function_body(self, node):
         for line in node.content:
