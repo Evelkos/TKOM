@@ -107,7 +107,7 @@ class Visitor:
                 if isinstance(right_operand, str):
                     right_operand_value = self.get_variable_value(right_operand)
                 self.save_variable(left_operand, right_operand_value)
-                return
+                return True
             else:
                 raise InvalidOperation("r-value", "=", "r-value")
 
@@ -123,7 +123,8 @@ class Visitor:
         operation = node.operation
         right_operand = node.right_operand.accept(self)
         
-        self.try_variable_assign(operation, left_operand, right_operand)
+        if self.try_variable_assign(operation, left_operand, right_operand):
+            return
 
         if isinstance(left_operand, str):
             left_operand = self.get_variable_value(left_operand)
