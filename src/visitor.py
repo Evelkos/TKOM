@@ -1,5 +1,5 @@
 # visitor.py
-from .exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue
+from .exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue, DivisionError
 from .ast.identifier import Identifier
 from .ast.bool import Bool
 from .ast.number import Number
@@ -47,6 +47,8 @@ class Visitor:
             elif operation == "*":
                 return left_operand * right_operand
             elif operation == "/":
+                if right_operand == 0:
+                    raise DivisionError()
                 return int(left_operand / right_operand)
             else:
                 raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)

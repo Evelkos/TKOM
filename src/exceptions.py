@@ -1,6 +1,10 @@
 # exceptions.py
 
 
+class DivisionError(Exception):
+    def __init__(self):
+        super().__init__()
+
 class InvalidSyntax(Exception):
     def __init__(self, position=(0, 0), expected_type=None, given_type=None, given_value=None):
         self.position = position

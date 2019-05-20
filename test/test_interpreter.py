@@ -3,7 +3,14 @@ from TKOM.src.source import Source
 from TKOM.src.parser import Parser
 from TKOM.src.visitor import Visitor
 from TKOM.src.interpreter import Interpreter
-from TKOM.src.exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue, InvalidSyntax
+from TKOM.src.exceptions import (
+    DivisionError,
+    UndefinedOperation,
+    InvalidOperation,
+    Undeclared,
+    InvalidValue,
+    InvalidSyntax
+)
 import io
 import pytest
 
@@ -98,6 +105,28 @@ def test_interpreter_run_with_list_variable_reassigned():
     interpreter = create_interpreter("function main() { list a = [5, 7, 2]; a = [1]; a = [93, 44]; return a; }")
     assert interpreter.run() == [93, 44]
 
+
 def test_interpreter_run_with_addition_expression():
     interpreter = create_interpreter("function main() { return 123 + 321; }")
     assert interpreter.run() == 444
+
+
+def test_interpreter_run_with_subtraction_expression():
+    interpreter = create_interpreter("function main() { return 999 - 453; }")
+    assert interpreter.run() == 546
+
+
+def test_interpreter_run_with_multiplication_expression():
+    interpreter = create_interpreter("function main() { return 23 * 324; }")
+    assert interpreter.run() == 7452
+
+
+def test_interpreter_run_with_division_expression():
+    interpreter = create_interpreter("function main() { return 321 / 3; }")
+    assert interpreter.run() == 107
+
+
+def test_interpreter_run_with_dividing_by_zero():
+    interpreter = create_interpreter("function main() { return 3948 / 0; }")
+    with pytest.raises(DivisionError):
+        interpreter.run() == 107
