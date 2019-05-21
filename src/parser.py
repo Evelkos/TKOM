@@ -259,13 +259,9 @@ class Parser:
         self.require_and_consume(Type.DELETE)
         self.require_and_consume(Type.OP_BRACKET)
 
-        if self.check_type(Type.NUMBER):
-            argument = self.parse_number()
-        else:
-            argument = self.parse_identifier()
+        argument = self.parse_expression()
 
         self.require_and_consume(Type.CL_BRACKET)
-
         return Delete(tmp_list, argument, None, None)
 
     def parse_list_operation_each(self, tmp_list):
@@ -277,7 +273,6 @@ class Parser:
         standard_operation = self.parse_expression()
 
         self.require_and_consume(Type.CL_BRACKET)
-
         return Each(tmp_list, operation, standard_operation, None, None)
 
     def parse_list_operation_filter(self, tmp_list):
@@ -286,27 +281,21 @@ class Parser:
         
         single_condition = self.parse_single_condition()
         conditions = [single_condition]
-
         while self.check_type(Type.AND):
             self.require_and_consume(Type.AND)
             single_condition = self.parse_single_condition()
             conditions.append(single_condition)
 
         self.require_and_consume(Type.CL_BRACKET)
-
         return Filter(tmp_list, conditions, None, None)
 
     def parse_list_operation_get(self, tmp_list):
         self.require_and_consume(Type.GET)
         self.require_and_consume(Type.OP_BRACKET)
 
-        if self.check_type(Type.NUMBER):
-            argument = self.parse_number()
-        else:
-            argument = self.parse_identifier()
+        argument = self.parse_expression()
 
         self.require_and_consume(Type.CL_BRACKET)
-
         return Get(tmp_list, argument, None, None)
 
     def parse_list_operation_length(self, tmp_list):

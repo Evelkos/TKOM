@@ -1,5 +1,12 @@
 # visitor.py
-from .exceptions import UndefinedOperation, InvalidOperation, Undeclared, InvalidValue, DivisionError
+from .exceptions import (
+    UndefinedOperation,
+    InvalidOperation,
+    Undeclared,
+    InvalidValue,
+    DivisionError,
+    IndexOutOfRange
+)
 from .ast.identifier import Identifier
 from .ast.bool import Bool
 from .ast.number import Number
@@ -85,7 +92,6 @@ class Visitor:
     def is_variable_in_map(self, variable_name):
         return variable_name in self.map[-1]
 
-
     @staticmethod
     def is_value_type_correct(variable_value, variable_type):
         types_conversion = {
@@ -94,6 +100,20 @@ class Visitor:
             "bool": bool
         }
         return variable_type in types_conversion and types_conversion[variable_type] == type(variable_value)
+
+    def load_source_list(self, list_operation_node):
+        source_list = list_operation_node.source_list.accept(self)
+        if isinstance(source_list, str):
+            source_list = self.get_variable_value(source_list)
+        return source_list
+
+    def load_list_position(self, list_operation_node):
+        position = list_operation_node.idx.accept(self)
+        if isinstance(position, str):
+            position = self.get_variable_value(position)
+        if type(position) is not int:
+            raise InvalidValue("int", type(position))
+        return position
 
     def save_variable(self, variable_name, variable_value):
         if self.is_variable_in_map(variable_name):
@@ -202,60 +222,67 @@ class Visitor:
                 return False
         return True
 
-    def visit_filter(self, node):
-        source_list = node.source_list.accept(self)
-        if isinstance(source_list, str):
-            source_list = self.get_variable_value(source_list)
 
-        result_list = []
-        for element in source_list:
-            if self.is_element_meet_the_conditions(element, node.conditions):
-                result_list.append(element)
-        return result_list
+    def visit_filter(self, node):
+        source_list = self.load_source_list(node)
+
+        if type(source_list) == list:
+            result_list = []
+            for element in source_list:
+                if self.is_element_meet_the_conditions(element, node.conditions):
+                    result_list.append(element)
+            return result_list
+        else:
+            raise InvalidOperation(".", source_list, "filter")
 
     @staticmethod
     def visit_filter_condition(node):
         return node.operator, node.r_value
 
     def visit_each(self, node):
-        source_list = node.source_list.accept(self)
-        if isinstance(source_list, str):
-            source_list = self.get_variable_value(source_list)
+        source_list = self.load_source_list(node)
 
-        new_list = []
-        for list_element in source_list:
-            left_operand = self.convert_to_variable_object(list_element)
-            operation = node.operator
-            right_operand = node.expression
-            new_list.append((Expression(left_operand, operation, right_operand)).accept(self))
-        return new_list
+        if type(source_list) == list:
+            new_list = []
+            for list_element in source_list:
+                left_operand = self.convert_to_variable_object(list_element)
+                operation = node.operator
+                right_operand = node.expression
+                new_list.append((Expression(left_operand, operation, right_operand)).accept(self))
+            return new_list
+        else:
+            raise InvalidOperation(".", source_list, "each")
 
     def visit_get(self, node):
-        source_list = node.source_list.accept(self)
-        if isinstance(source_list, str):
-            source_list = self.get_variable_value(source_list)
-        position_to_get = node.idx.accept(self)
-        if isinstance(position_to_get, str):
-            position_to_get = self.get_variable_value(position_to_get)
-        return source_list[position_to_get]
+        source_list = self.load_source_list(node)
+
+        if type(source_list) == list:
+            position_to_get = self.load_list_position(node)
+            if position_to_get in range(0, len(source_list)):
+                return source_list[position_to_get]
+            else:
+                raise IndexOutOfRange()
+        else:
+            raise InvalidOperation(".", source_list, "get")
 
     def visit_length(self, node):
-        source_list = node.source_list.accept(self)
-        if isinstance(source_list, str):
-            source_list = self.get_variable_value(source_list)
-        return len(source_list)
+        source_list = self.load_source_list(node)
+
+        if type(source_list) == list:
+            return len(source_list)
+        else:
+            raise InvalidOperation(".", source_list, "length")
 
     def visit_delete(self, node):
-        source_list = node.source_list.accept(self)
-        if isinstance(source_list, str):
-            source_list = self.get_variable_value(source_list)
-        position_to_delete = node.idx.accept(self)
-        if isinstance(position_to_delete, str):
-            position_to_delete = self.get_variable_value(position_to_delete)
+        source_list = self.load_source_list(node)
 
-        if position_to_delete in range(0, len(source_list)):
-            source_list.pop(position_to_delete)
-        return source_list
+        if type(source_list) == list:
+            position_to_delete = self.load_list_position(node)
+            if position_to_delete in range(0, len(source_list)):
+                source_list.pop(position_to_delete)
+            return source_list
+        else:
+            raise InvalidOperation(".", source_list, "delete")
 
     @staticmethod
     def visit_number(node):
@@ -283,4 +310,3 @@ class Visitor:
 
     def set_functions_def(self, functions_def):
         self.functions_def = functions_def
-        print(self.functions_def)

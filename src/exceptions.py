@@ -37,3 +37,8 @@ class Undeclared(Exception):
     def __init__(self, subject, name):
         self.subject = subject
         self.name = name
+
+
+class IndexOutOfRange(Exception):
+    def __init__(self):
+        super().__init__()
