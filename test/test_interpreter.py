@@ -870,9 +870,49 @@ def test_interpreter_with_function_call_with_multiple_expressions_as_arguments()
     )
     assert interpreter.run() == 33
 
-def test_interpreter_with_list_operation_inside_function():
+
+def test_interpreter_with_list_operation_filter_inside_function():
     interpreter = create_interpreter(" \
         function fun(list a, number b) { list c = a.filter(x > b); return c;} \
         function main() { return fun([1, 2, 3, 4, 5], 2); } \
     ")
     assert interpreter.run() == [3, 4, 5]
+
+
+def test_interpreter_with_list_operation_get_inside_function():
+    interpreter = create_interpreter(" \
+        function fun(list a, number b) { number c = a.get(b); return c;} \
+        function main() { return fun([1, 2, 3, 4, 5], 2); } \
+    ")
+    assert interpreter.run() == 3
+
+
+def test_interpreter_with_list_operation_delete_inside_function():
+    interpreter = create_interpreter(" \
+        function fun(list a, number b) { list c = a.delete(b); return c;} \
+        function main() { return fun([1, 2, 3, 4, 5], 4); } \
+    ")
+    assert interpreter.run() == [1, 2, 3, 4]
+
+
+def test_interpreter_with_list_operation_length_inside_function():
+    interpreter = create_interpreter(" \
+        function fun(list a) { number c = a.length(); return c;} \
+        function main() { return fun([1, 2, 3, 4, 5]); } \
+    ")
+    assert interpreter.run() == 5
+
+
+def test_interpreter_with_list_operation_each_inside_function():
+    interpreter = create_interpreter(" \
+        function fun(list a, list b) { list c = a.each(+, b); return c;} \
+        function main() { return fun([1, 2, 3, 4, 5], [0]); } \
+    ")
+    assert interpreter.run() == [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0]]
+
+
+def test_interpreter_with_complex_list_operation():
+    interpreter = create_interpreter(" \
+        function main() { return [1, 2, 3, 4, 5, 6, 7].filter(x > 4).length(); } \
+    ")
+    assert interpreter.run() == 3
