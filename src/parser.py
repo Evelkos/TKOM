@@ -91,24 +91,33 @@ class Parser:
         return result_bool
 
     def parse_component(self):
+        flag = False
+        if self.current_token.get_value() == "-":
+            self.consume()
+            flag = True
+
         if self.check_type(Type.BOOL):
-            return self.parse_bool()
+            return_statement = self.parse_bool()
         elif self.check_type(Type.NUMBER):
-            return self.parse_number()
+            return_statement = self.parse_number()
         elif self.check_type(Type.IDENTIFIER):
             identifier = self.parse_identifier()
             if self.check_type(Type.DOT):
-                return self.parse_list_component(identifier)
+                return_statement = self.parse_list_component(identifier)
             elif self.check_type(Type.OP_BRACKET):
-                return self.parse_function_call(identifier)
+                return_statement = self.parse_function_call(identifier)
             else:
-                return identifier
+                return_statement = identifier
         else:
             standard_list = self.parse_list()
             if self.check_type(Type.DOT):
-                return self.parse_list_component(standard_list)
+                return_statement = self.parse_list_component(standard_list)
             else:
-                return standard_list
+                return_statement = standard_list
+
+        if flag:
+            return_statement = Expression(Number(0), "-", return_statement)
+        return return_statement
 
     def parse_content(self):
         end_of_content_token_types = [Type.RETURN, Type.CL_CURLY_BRACKET]
@@ -314,10 +323,9 @@ class Parser:
             factor = Expression(factor, operator, new_factor, None, None)
         return factor
 
-    def parse_number(self):
+    def parse_number(self):      
         token = self.require_and_consume(Type.NUMBER)
-        result_number = Number(token.get_value(), None, None)
-        return result_number
+        return Number(token.get_value(), None, None)
 
     def parse_operation(self):
         if self.check_type(Type.PLUS):

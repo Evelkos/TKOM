@@ -74,7 +74,9 @@ class Visitor:
     def get_variable_value(self, variable_name):
         if self.is_variable_in_map(variable_name):
             return self.map[-1][variable_name]["value"]
-
+        else:
+            raise Undeclared("variable", variable_name)
+        
     def find_function_def(self, identifier, arguments_num):
         for function_def in self.functions_def:
             if function_def.identifier == identifier and len(function_def.arguments) == arguments_num:
@@ -138,6 +140,8 @@ class Visitor:
             return_value = self.calculate_numeric_expression(left_operand, right_operand, operation)
         if return_value is None:
             return_value = self.calculate_list_expression(left_operand, right_operand, operation)
+        if return_value is None:
+            raise UndefinedOperation(type(left_operand).__name__, operation, type(left_operand).__name__)
         return return_value
 
     def visit_function(self, node):
@@ -278,3 +282,4 @@ class Visitor:
 
     def set_functions_def(self, functions_def):
         self.functions_def = functions_def
+        print(self.functions_def)

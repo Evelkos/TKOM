@@ -6,6 +6,7 @@ from src.parser import Parser
 from src.visitor import Visitor
 from src.interpreter import Interpreter
 from src.exceptions import (
+    DivisionError,
     InvalidSyntax,
     UndefinedOperation,
     InvalidOperation,
@@ -23,6 +24,8 @@ if __name__ == "__main__":
     try:
         result = interpreter.run()
         print(f"Ostateczny wynik = {result}")
+    except DivisionError as e:
+        print("Error: Division by zero.")
     except InvalidSyntax as e:
         print(
             f"Error: On position: {e.position}. "
