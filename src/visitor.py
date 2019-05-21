@@ -151,10 +151,11 @@ class Visitor:
     def visit_function_body(self, node):
         for line in node.content:
             line.accept(self)
-        return_statement = node.return_statement.accept(self)
-        if isinstance(node.return_statement, Identifier):
-            return_statement = self.get_variable_value(return_statement)
-        return return_statement
+        if node.return_statement is not None:
+            return_statement = node.return_statement.accept(self)
+            if isinstance(node.return_statement, Identifier):
+                return_statement = self.get_variable_value(return_statement)
+            return return_statement
 
     def visit_function_call(self, node):
         function_def = self.find_function_def(node.identifier, len(node.arguments))

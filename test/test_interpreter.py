@@ -30,7 +30,12 @@ def test_interpreter_run_with_empty_main():
     assert interpreter.run() == None
 
 
-def test_interpreter_run_with_number_return_in_main():
+def test_interpreter_run_with_empty_return_and_nonempty_content_in_main():
+    interpreter = create_interpreter("function main(){ 1 + 1; }")
+    assert interpreter.run() == None
+
+
+def test_interpreter_run_with_empty_content_in_main():
     interpreter = create_interpreter("function main(){ return 312; }")
     assert interpreter.run() == 312
 
@@ -276,6 +281,7 @@ def test_interpreter_run_with_undeclared_variable_return():
     interpreter = create_interpreter("function main() { return a; }")
     with pytest.raises(Undeclared):
         interpreter.run()
+
 
 def test_interpreter_run_with_undeclared_variable_in_expression():
     interpreter = create_interpreter("function main() { 1 + a; return 3; }")
