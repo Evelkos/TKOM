@@ -117,6 +117,11 @@ def test_interpreter_with_list_variable_reassigned():
     assert interpreter.run() == [93, 44]
 
 
+def test_interpreter_with_undefined_variable():
+    interpreter = create_interpreter("function main() { number a; return a; }")
+    assert interpreter.run() == None
+
+
 def test_interpreter_with_addition_expression():
     interpreter = create_interpreter("function main() { return 123 + 321; }")
     assert interpreter.run() == 444
@@ -387,6 +392,26 @@ def test_interpreter_with_minus_list():
     interpreter = create_interpreter("function main() { return -[1, 2, 3]; }")
     with pytest.raises(UndefinedOperation):
         interpreter.run()
+
+
+def test_interpreter_with_expression_as_list_element():
+    interpreter = create_interpreter("function main() { return [1 + 1, 7]; }")
+    assert interpreter.run() == [2, 7]
+
+
+def test_interpreter_with_list_as_list_element():
+    interpreter = create_interpreter("function main() { return [1, [4, 6, 8], 7]; }")
+    assert interpreter.run() == [1, [4, 6, 8], 7]
+
+
+def test_interpreter_with_empty_list_as_list_element():
+    interpreter = create_interpreter("function main() { return [1, [], 7]; }")
+    assert interpreter.run() == [1, [], 7]
+
+
+def test_interpreter_with_list_operation_as_list_element():
+    interpreter = create_interpreter("function main() { return [1, [4, 6, 8].filter(x > 7), 7]; }")
+    assert interpreter.run() == [1, [8], 7]
 
 
 def test_interpreter_with_minus_variable():
@@ -733,23 +758,121 @@ def test_interpreter_with_print_operation_with_identifier_as_argument(capsys):
 
 def test_interpreter_with_print_operation_with_number_as_argument(capsys):
     interpreter = create_interpreter("function main() { print 1; }")
-    with pytest.raises(InvalidSyntax):
-        interpreter.run()
+    interpreter.run()
+    out, _ = capsys.readouterr()
+    assert out == "1\n"
 
 
 def test_interpreter_with_print_operation_with_bool_as_argument(capsys):
     interpreter = create_interpreter("function main() { print true; }")
-    with pytest.raises(InvalidSyntax):
-        interpreter.run()
+    interpreter.run()
+    out, _ = capsys.readouterr()
+    assert out == "True\n"
 
 
 def test_interpreter_with_print_operation_with_list_as_argument(capsys):
     interpreter = create_interpreter("function main() { print [1, 2, 3, 4, 5]; }")
-    with pytest.raises(InvalidSyntax):
-        interpreter.run()
+    interpreter.run()
+    out, _ = capsys.readouterr()
+    assert out == "[1, 2, 3, 4, 5]\n"
 
 
 def test_interpreter_with_print_operation_with_expression_as_argument(capsys):
     interpreter = create_interpreter("function main() { print 1 + 1; }")
-    with pytest.raises(InvalidSyntax):
+    interpreter.run()
+    out, _ = capsys.readouterr()
+    assert out == "2\n"
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_number_return():
+    interpreter = create_interpreter("function fun() { return 123; } function main() { return fun(); }")
+    assert interpreter.run() == 123
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_list_return():
+    interpreter = create_interpreter("function fun() { return [582, 5]; } function main() { return fun(); }")
+    assert interpreter.run() == [582, 5]
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_true_return():
+    interpreter = create_interpreter("function fun() { return true; } function main() { return fun(); }")
+    assert interpreter.run() == True
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_false_return():
+    interpreter = create_interpreter("function fun() { return false; } function main() { return fun(); }")
+    assert interpreter.run() == False
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_variable_return():
+    interpreter = create_interpreter("function fun() { number a = 395; return a; } function main() { return fun(); }")
+    assert interpreter.run() == 395
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_undeclared_variable():
+    interpreter = create_interpreter("function fun() { return a; } function main() { return fun(); }")
+    with pytest.raises(Undeclared):
         interpreter.run()
+
+
+def test_interpreter_with_function_call_with_no_arguments_and_undefined_variable_return():
+    interpreter = create_interpreter("function fun() { number a; return a; } function main() { return fun(); }")
+    assert interpreter.run() == None
+
+
+def test_interpreter_with_function_call_with_single_argument():
+    interpreter = create_interpreter("function fun(number a) { return a + 1; } function main() { return fun(1); }")
+    assert interpreter.run() == 2
+
+
+def test_interpreter_with_function_call_with_multiple_arguments():
+    interpreter = create_interpreter(
+        "function fun(number a, number b, number c) { return a + b + c; } function main() { return fun(9, 7, 8); }"
+    )
+    assert interpreter.run() == 24
+
+
+def test_interpreter_with_function_call_with_local_variable():
+    interpreter = create_interpreter(
+        "function fun(number a, number b) { number c = a + b ; return c; } function main() { return fun(7, 3); }"
+    )
+    assert interpreter.run() == 10
+
+
+def test_interpreter_with_function_call_with_number_as_argument():
+    interpreter = create_interpreter("function fun(number a) { return a; } function main() { return fun(7); }")
+    assert interpreter.run() == 7
+
+
+def test_interpreter_with_function_call_with_true_as_argument():
+    interpreter = create_interpreter("function fun(bool a) { return a; } function main() { return fun(true); }")
+    assert interpreter.run() == True
+
+
+def test_interpreter_with_function_call_with_false_as_argument():
+    interpreter = create_interpreter("function fun(bool a) { return a; } function main() { return fun(false); }")
+    assert interpreter.run() == False
+
+
+def test_interpreter_with_function_call_with_list_as_argument():
+    interpreter = create_interpreter("function fun(list a) { return a; } function main() { return fun([1, 2, 3]); }")
+    assert interpreter.run() == [1, 2, 3]
+
+
+def test_interpreter_with_function_call_with_expression_as_argument():
+    interpreter = create_interpreter("function fun(number a) { return a; } function main() { return fun(1 + 5); }")
+    assert interpreter.run() == 6
+
+
+def test_interpreter_with_function_call_with_multiple_expressions_as_arguments():
+    interpreter = create_interpreter(
+        "function fun(number a, number b) { return a + b; } function main() { return fun(1 + 5, 9 * 3); }"
+    )
+    assert interpreter.run() == 33
+
+def test_interpreter_with_list_operation_inside_function():
+    interpreter = create_interpreter(" \
+        function fun(list a, number b) { list c = a.filter(x > b); return c;} \
+        function main() { return fun([1, 2, 3, 4, 5], 2); } \
+    ")
+    assert interpreter.run() == [3, 4, 5]

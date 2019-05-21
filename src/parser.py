@@ -145,14 +145,7 @@ class Parser:
     def parse_elements(self, stop_type):  # uzywane przy liscie: koniec ']' oraz funkcji: koniec ')'
         elements = []
         while self.current_token.get_type() != stop_type:
-            if self.check_type(Type.BOOL):
-                elements.append(self.parse_bool())
-            elif self.check_type(Type.NUMBER):
-                elements.append(self.parse_number())
-            elif self.check_type(Type.IDENTIFIER):
-                elements.append(self.parse_identifier())
-            else:
-                elements.append(self.parse_list())
+            elements.append(self.parse_expression())
             if self.check_type(Type.COMMA):
                 self.consume()
         return elements
@@ -328,8 +321,8 @@ class Parser:
 
     def parse_print(self):
         self.require_and_consume(Type.PRINT)
-        identifier = self.parse_identifier()
-        return PrintFunction(identifier, None, None)
+        value = self.parse_expression()
+        return PrintFunction(value, None, None)
 
     def parse_return(self):
         self.require_and_consume(Type.RETURN)

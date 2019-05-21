@@ -89,6 +89,23 @@ class Visitor:
             if function_def.identifier == identifier and len(function_def.arguments) == arguments_num:
                 return function_def
 
+    def is_element_meet_the_conditions(self, element, conditions):
+        operators = {
+            ">": operator.gt,
+            "<": operator.lt,
+            ">=": operator.ge,
+            "<=": operator.le,
+            "==": operator.eq,
+            "!=": operator.ne
+        }
+        print(conditions)
+        for condition in conditions:
+            operation, expression = condition.accept(self)
+            operation = operators[operation]
+            if not (operation(element, expression)):
+                return False
+        return True
+
     def is_variable_in_map(self, variable_name):
         return variable_name in self.map[-1]
 
@@ -206,23 +223,6 @@ class Visitor:
             elements.append(element.accept(self))
         return elements
 
-    def is_element_meet_the_conditions(self, element, conditions):
-        operators = {
-            ">": operator.gt,
-            "<": operator.lt,
-            ">=": operator.ge,
-            "<=": operator.le,
-            "==": operator.eq,
-            "!=": operator.ne
-        }
-        for condition in conditions:
-            operation, expression = condition.accept(self)
-            operation = operators[operation]
-            if not (operation(element, expression.accept(self))):
-                return False
-        return True
-
-
     def visit_filter(self, node):
         source_list = self.load_source_list(node)
 
@@ -235,9 +235,12 @@ class Visitor:
         else:
             raise InvalidOperation(".", source_list, "filter")
 
-    @staticmethod
-    def visit_filter_condition(node):
-        return node.operator, node.r_value
+    def visit_filter_condition(self, node):
+        operator = node.operator
+        r_value = node.r_value.accept(self)
+        if isinstance(r_value, str):
+            r_value = self.get_variable_value(r_value)
+        return operator, r_value
 
     def visit_each(self, node):
         source_list = self.load_source_list(node)
