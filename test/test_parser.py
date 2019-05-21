@@ -18,7 +18,6 @@ from TKOM.src.ast.expression import Expression
 from TKOM.src.ast.list_operation import Filter, FilterCondition, Each, Get, Length, Delete
 import io
 import pytest
-import sys
 
 def create_parser(string):
 	source = Source(io.StringIO(string))
