@@ -10,20 +10,9 @@ class Lexer:
 
     def build_next_token(self):
         self.ignore_white_spaces()
-        if self.try_eof():
-            return
-        elif self.try_identifier():
-            return
-        elif self.try_digit():
-            return
-        elif self.try_double_operator():
-            return
-        elif self.try_single_character():
-            return
-        else:
-            self.token = Token(Type.UNIDENTIFIED, self.source.get_char())
-            self.source.get_next_char()
-            return
+        line, column = self.source.get_position()
+        self.try_to_match()
+        self.token.set_position(line, column)
 
     def get_token(self):
         return self.token
@@ -104,3 +93,19 @@ class Lexer:
             self.source.get_next_char()
             return True
         return False
+
+    def try_to_match(self):
+        if self.try_eof():
+            return
+        elif self.try_identifier():
+            return
+        elif self.try_digit():
+            return
+        elif self.try_double_operator():
+            return
+        elif self.try_single_character():
+            return
+        else:
+            self.token = Token(Type.UNIDENTIFIED, self.source.get_char())
+            self.source.get_next_char()
+            return

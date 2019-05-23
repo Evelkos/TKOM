@@ -92,15 +92,30 @@ class Symbol:
 
 
 class Token:
-    def __init__(self, token_type=Type.IDENTIFIER, value=""):
+    def __init__(self, token_type=Type.IDENTIFIER, value="", line=None, column=None):
         self.token_type = token_type
         self.value = value
+        self.line = line
+        self.column = column
 
     def __repr__(self):
-        return f"(token_type={self.token_type}, value={self.value})"
+        return f"(token_type={self.token_type}, value={self.value}, position=({self.line}, {self.column}))"
+
+    def get_column(self):
+        return self.column
+
+    def get_line(self):
+        return self.line
+
+    def get_position(self):
+        return self.line, self.column
 
     def get_type(self):
         return self.token_type
 
     def get_value(self):
         return self.value
+
+    def set_position(self, line, column):
+        self.line = line
+        self.column = column

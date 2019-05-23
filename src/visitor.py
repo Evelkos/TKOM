@@ -98,7 +98,6 @@ class Visitor:
             "==": operator.eq,
             "!=": operator.ne
         }
-        print(conditions)
         for condition in conditions:
             operation, expression = condition.accept(self)
             operation = operators[operation]
